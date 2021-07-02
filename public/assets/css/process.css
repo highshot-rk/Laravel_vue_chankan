@@ -1,0 +1,591 @@
+body {
+    min-height: 100vh;
+    height: 100vh;
+    overflow: hidden;
+    padding-bottom: 10px;
+}
+
+a {
+  cursor: pointer;
+}
+
+#proccess-header {
+    position: relative;
+    padding: 20px 0;
+    z-index: 100000;
+}
+
+.proccess-header-inner {
+    padding: 0 20px;
+}
+
+/*-----------------------------------------------------------------------------------------
+
+
+
+  add
+
+
+
+------------------------------------------------------------------------------------------*/
+.content__wrap .content__floar {
+    background: #fff;
+    padding: 46px;
+    border-radius: 20px;
+    box-shadow: rgba(146, 159, 181, 0.1) 0px 0px 10px;
+}
+
+/*-----------------------------------------------------------------------------------------
+
+
+
+  common
+
+
+
+------------------------------------------------------------------------------------------*/
+.proccess__wrap {
+    padding: 0 20px;
+    height: 100%;
+}
+
+.proccess__wrap__inner {
+    height: 100%;
+}
+
+/*-----------------------------------------------------------------------------------------
+
+
+
+  header
+
+
+
+------------------------------------------------------------------------------------------*/
+.proccess__button li {
+  position: relative;
+}
+
+.proccess__button a {
+  position: relative;
+  display: block;
+  min-height: 40px;
+  height: 40px;
+  line-height: 40px;
+  padding: 0 20px;
+  background: #fff;
+  font-weight: 700;
+}
+
+.proccess__button a.calendarButton {
+  padding: 0;
+}
+
+.proccess__button .vdp-datepicker {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  height: 100%;
+}
+
+.proccess__button .vdp-datepicker > div:not(.vdp-datepicker__calendar),
+.proccess__button .vdp-datepicker input {
+  display: block;
+  height: 100%;
+}
+
+.proccess__back a {
+  font-size: 16px;
+  font-weight: 700;
+  color: #929FB5;
+}
+
+.proccess__calendar li {
+  margin-right: 5px;
+}
+
+.proccess__calendar li:nth-child {
+  margin-right: 0;
+}
+
+/*-----------------------------------------------------------------------------------------
+
+
+
+  main
+
+
+
+------------------------------------------------------------------------------------------*/
+.process-table {
+  position: relative;
+  width: 100%;
+  height: -webkit-calc(100vh - 88px);
+  height: calc(100vh - 88px);
+  overflow-y: scroll;
+  -webkit-overflow-scrolling: touch;
+}
+
+.process-table-tr {
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  border-bottom: 1px solid #F1F3F6;
+}
+
+.process-table-th.day {
+  position: sticky;
+  left: 0px;
+  z-index: 100;
+}
+
+.process-table-th.first,
+.process-table-th.time {
+  position: sticky;
+  left: 100px;
+  z-index: 100;
+}
+
+.process-table-thead {
+  position: sticky;
+  top: 0;
+  z-index: 10000;
+  padding-bottom: -50px;
+  padding-right: 20px;
+}
+
+.process-table-thead .process-table-th {
+  width: 150px;
+  min-width: 150px;
+  height: 45px;
+  line-height: 45px;
+  border-right: 1px solid #F1F3F6;
+  text-align: center;
+  font-weight: 700;
+  border-bottom: 5px solid #F1F3F6;
+}
+
+.process-table-thead .process-table-th.day {
+  width: 100px;
+  min-width: 100px;
+  background: #F1F3F6;
+}
+
+.process-table-thead .process-table-th.first {
+  width: 120px;
+  min-width: 120px;
+  border-radius: 5px 0 0;
+  background: #fff;
+}
+
+.process-table-thead .process-table-th.name {
+  background: #fff;
+}
+
+.process-table-tbody {
+  position: absolute;
+  top: 47px;
+  padding-right: 20px;
+  height: 500px;
+  height: -webkit-calc(100vh - 134px);
+  height: calc(100vh - 134px);
+}
+
+.process-table-tbody .process-table-tbody__content {
+  margin-top: -46px;
+  padding-top: 46px;
+}
+
+.process-table-tbody .process-table-th,
+.process-table-tbody .process-table-td {
+  height: 150px;
+  border-right: 1px solid #F1F3F6;
+  vertical-align: bottom;
+}
+
+.process-table-tbody .process-table-th {
+  width: 120px;
+  min-width: 120px;
+}
+
+.process-table-tbody .process-table-th.day {
+    width: 100px;
+    min-width: 100px;
+    font-weight: 700;
+    color: #929FB5;
+    background: #F1F3F6;
+}
+
+.process-table-tbody .process-table-th:not(.day) {
+    background: #fff;
+}
+
+.process-table-tbody .process-table-td {
+    width: 150px;
+    background: #fff;
+}
+
+.work-field .work-field-block {
+    width: 100px;
+    margin: auto;
+}
+
+.work-field__time {
+    width: 120px;
+    height: 150px;
+}
+
+.work-field__time__inner {
+    position: relative;
+    text-align: center;
+    font-weight: 700;
+}
+
+.field-edit .field-button {
+    display: block;
+    width: 40px;
+    border-radius: 3px;
+    height: 17px;
+    line-height: 17px;
+    color: #fff;
+}
+
+.field-edit .field-button.field-add {
+    background: #6495ed;
+}
+
+.field-edit .field-button.field-delete {
+    background: #D13B3B;
+    margin-left: 5px;
+}
+
+.work-field__work {
+    width: 150px;
+    height: 150px;
+    position: relative;
+}
+.work-field__work .work-field__work__inner {
+    width: 140px;
+    height: 140px;
+    margin: auto;
+    position: relative;
+}
+.work-field__work .work-field__work__inner.noDrag {
+    pointer-events: none;
+}
+.work-field__work .field__work__content {
+    cursor: pointer;
+    height: 100%;
+    width: 100%;
+    margin: auto;
+    z-index: 1000;
+    position: relative;
+}
+.work-field__work .dragButton {
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    right: 0;
+    left: 0;
+    z-index: 100;
+}
+
+
+.work-field__work__button {
+    z-index: 1;
+    position: absolute;
+    left: 10px;
+    right: 10px;
+    bottom: 10px;
+    top: 10px;
+    width: 130px;
+    height: 130px;
+    border: dashed 3px #EBEBEB;
+}
+
+.work-field__work__button .work-field__work__button__inner {
+    height: 100%;
+    width: 100%;
+}
+
+.work-field__work__button .add-button {
+    position: relative;
+    text-align: center;
+    display: block;
+    width: 70px;
+    height: 20px;
+    line-height: 20px;
+    font-weight: 700;
+    color: #C1CBD8;
+    background: #F1F3F6;
+}
+
+.work-field__work__button .add-button.work-add {
+  margin-bottom: 5px;
+}
+
+/*-----------------------------------------------------------------------------------------
+
+
+
+  main - memo
+
+
+
+------------------------------------------------------------------------------------------*/
+.memoContent {
+    overflow: auto;
+    height: 100%;
+    width: 100%;
+    margin: auto;
+    background: #F7FFE0;
+    padding: 10px;
+    z-index: 1;
+}
+
+.memoContent .memoContent__inner {
+    overflow-y: scroll;
+    word-break: break-all;
+}
+
+.memoContent .memoContent__inner textarea {
+    min-height: 120px;
+}
+
+.workContent {
+    z-index: 10;
+    overflow: auto;
+    height: 100%;
+    width: 100%;
+    margin: auto;
+    background: #fff;
+}
+
+.workContent__inner li {
+    font-size: 10px;
+    height: 24px;
+    line-height: 24px;
+    padding: 0 3px;
+    border-bottom: #F1F3F6 1px dashed;
+}
+
+.workContent__inner li:first-child, .workContent__inner li:last-child {
+    height: auto;
+    line-height: auto;
+    padding-top: 5px;
+    border-bottom: none;
+}
+
+.workContent__inner li:last-child {
+    line-height: 1.2;
+    overflow-y: scroll;
+}
+
+.workContent__inner li a {
+    color: #172DD6;
+    text-decoration: underline;
+}
+
+.workContent__inner li span {
+    height: 16px;
+    line-height: 16px;
+}
+
+.workContent__inner li span.work {
+    width: 36px;
+    text-align: center;
+    border-radius: 3px;
+    color: #fff;
+    font-weight: 700;
+}
+
+.workContent__inner li span.erecting {
+    background: #6A87C9;
+}
+
+.workContent__inner li span.dismantling {
+    background: #C96A6A;
+}
+
+.workContent__inner li span.beforeContact a {
+    display: inline-block;
+    background: #000000;
+    color: #fff;
+    padding: 0 7px;
+    border-radius: 3px;
+    color: #fff;
+    text-decoration: none;
+    font-weight: 700;
+}
+
+.border-color__pink {
+    border-bottom: 1px solid #C96A6A;
+}
+
+.border-color.one {
+    border-bottom: 1px solid #ff0000;
+}
+
+.border-color.two {
+    border-bottom: 1px solid #ff00ff;
+}
+
+.border-color.three {
+    border-bottom: 1px solid #7f00ff;
+}
+
+.border-color.four {
+    border-bottom: 1px solid #0000ff;
+}
+
+.border-color.five {
+    border-bottom: 1px solid #007fff;
+}
+
+.border-color.six {
+    border-bottom: 1px solid #00ffff;
+}
+
+.border-color.seven {
+    border-bottom: 1px solid #00ff00;
+}
+
+.border-color.eight {
+    border-bottom: 1px solid #7fff00;
+}
+
+.border-color.nine {
+    border-bottom: 1px solid #ffff00;
+}
+
+.border-color.ten {
+    border-bottom: 1px solid #ff7f00;
+}
+
+/*-----------------------------------------------------------------------------------------
+
+
+
+  modal
+
+
+
+------------------------------------------------------------------------------------------*/
+.modal-wrap {
+    position: fixed;
+    top: 0;
+    right: 0;
+    bottom: 0;
+    left: 0;
+    overflow-y: auto;
+    visibility: hidden;
+    opacity: 0;
+    z-index: -1;
+    background: rgba(0, 0, 0, 0.3);
+}
+
+.modal-wrap.is-open {
+    visibility: visible;
+    opacity: 1;
+    z-index: 100;
+}
+
+.modal-wrap.memo-modal {
+    z-index: 100001;
+    -webkit-box-align: center;
+    -ms-flex-align: center;
+    align-items: center;
+    -webkit-box-pack: center;
+    -ms-flex-pack: center;
+    justify-content: center;
+    display: -webkit-box;
+    display: -ms-flexbox;
+    display: flex;
+}
+
+.modal-wrap.work-modal {
+    z-index: 100001;
+    justify-content: center;
+    display: flex;
+}
+
+.modal-wrap.work-modal .content__floar {
+    margin: 60px auto;
+}
+
+.modal-wrap .content__floar {
+    width: 570px;
+    margin: auto;
+}
+
+.selectColor .colorBox {
+    position: relative;
+    background: #fff;
+}
+
+.selectColor .colorBox input[type=radio] {
+    width: 40px;
+    height: 40px;
+    opacity: 0;
+}
+
+.selectColor .colorBox input[type=radio]:checked + label {
+    opacity: 0.3;
+}
+
+.selectColor .colorBox label {
+    position: absolute;
+    display: block;
+    left: 0;
+    top: 0;
+    height: 40px;
+    width: 100%;
+    cursor: pointer;
+    pointer-events: none;
+    border-radius: 3px;
+}
+
+.selectColor .colorBox.one label {
+    background: #ff0000;
+}
+
+.selectColor .colorBox.two label {
+    background: #ff00ff;
+}
+
+.selectColor .colorBox.three label {
+    background: #7f00ff;
+}
+
+.selectColor .colorBox.four label {
+    background: #0000ff;
+}
+
+.selectColor .colorBox.five label {
+    background: #007fff;
+}
+
+.selectColor .colorBox.six label {
+    background: #00ffff;
+}
+
+.selectColor .colorBox.seven label {
+    background: #00ff00;
+}
+
+.selectColor .colorBox.eight label {
+    background: #7fff00;
+}
+
+.selectColor .colorBox.nine label {
+    background: #ffff00;
+}
+
+.selectColor .colorBox.ten label {
+    background: #ff7f00;
+}
+.content__submit .submit__box {
+    width: 220px;
+}

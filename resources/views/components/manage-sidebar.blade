@@ -1,0 +1,28 @@
+<div class="wrap__left">
+  <div class="wrap__left__inner">
+    <div id="close__button" class="sp">
+      <img src="{{ asset('assets//img/icon_batu_black.png') }}">
+    </div>
+    <div class="wrap__left__logo pc">
+      <img src="{{ asset('assets/img/logo.png') }}">
+    </div>
+    <ul>
+      <li><a href="" title=""><img src="{{ asset('assets/img/icon_human_black.png') }}">会員一覧</a></li>
+      <li><a href="" title=""><img src="{{ asset('assets/img/icon_profile_black.png') }}">会員追加</a></li>
+      <li><a href="" title=""><img src="{{ asset('assets/img/icon_company_black.png') }}">広告会社一覧</a></li>
+      <li><a href="" title=""><img src="{{ asset('assets/img/icon_term_black.png') }}">広告会社追加</a></li>
+      <li><a href="" title=""><img src="{{ asset('assets/img/icon_mail_black.png') }}">管理者一覧</a></li>
+      <li><a href="" title=""><img src="{{ asset('assets/img/icon_mail_black.png') }}">管理者追加</a></li>
+            <li>
+                <a href="{{ route('logout') }}"
+                    onclick="event.preventDefault();
+                            document.getElementById('logout-form').submit();">
+                    ログアウト
+                </a>
+            </li>
+            <form id="logout-form" action="{{ route('logout') }}" method="POST" style="display: none;">
+                @csrf
+            </form>
+    </ul>
+  </div>
+</div>

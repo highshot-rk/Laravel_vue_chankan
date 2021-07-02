@@ -1,0 +1,26 @@
+  <nav class="sp commonShadow">
+    <div class="allWrapper">
+      <ul class="flex__wrap">
+        <li><a href="/" class="f__center"><img src="{{ asset('assets/img/icon_calender_black.png') }}"></a></li>
+        <li><span id="opneMenu" class="f__center" @click="toggleItem"><img src="{{ asset('assets/img/icon_nav_menu.png') }}"></span></li>
+      </ul>
+      <div class="plusButton">
+        <a href="projects/add" class="f__center"><img src="{{ asset('assets/img/icon_add_black.png') }}"></a>
+      </div>
+    </div>
+  </nav>
+  <div class="menuTable" :class="{'isOpen': isModalActive}">
+    <div class="allWrapper">
+      <div class="modal__inner">
+        <div class="closeMenu" @click="closeItem"><img src="{{ asset('assets/img/icon_batu_black.png') }}"></div>
+        <ul>
+          <li><a href=""><img src="{{ asset('assets/img/icon_calender_black.png') }}" alt="">会員一覧</a></li>
+          <li><a href=""><img src="{{ asset('assets/img/icon_human_black.png') }}" alt="">会員追加</a></li>
+          <li><a href=""><img src="{{ asset('assets/img/icon_profile_black.png') }}" alt="">広告会社一覧</a></li>
+          <li><a href=""><img src="{{ asset('assets/img/icon_term_black.png') }}" alt="">管理者一覧</a></li>
+          <li><a href=""><img src="{{ asset('assets/img/icon_goout_black.png') }}" alt="">管理者追加</a></li>
+          <li><a href=""><img src="{{ asset('assets/img/icon_nav_calender.png') }}" alt="">ログアウト</a></li>
+        </ul>
+      </div>
+    </div>
+  </div>
