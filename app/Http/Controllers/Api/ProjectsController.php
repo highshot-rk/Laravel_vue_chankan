@@ -142,7 +142,7 @@ class ProjectsController extends ApiBaseController
                 }
             }
             // 未解体案件を登録する
-            unset($projectData['work_on']);
+            // unset($projectData['work_on']);
             unset($projectData['enable_sms']);
             $projectData['project_type'] = config('const.project.type.undisassembled');
             $projectData['time_type']    = config('const.project.time_type.none');

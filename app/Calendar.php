@@ -40,7 +40,6 @@ class Calendar
             $this->html = '<table class="table_longpress user">';
         }
         $this->html .= <<< EOS
-
         <thead>
             <tr>
                 <th></th>
