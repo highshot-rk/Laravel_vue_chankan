@@ -81,3 +81,7 @@ The Laravel framework is open-sourced software licensed under the [MIT license](
 ## SSL証明書の更新手順
 1. 本番サーバにログインする。
 1. 次のコマンドを実行<br>`sudo /usr/bin/certbot-auto renew --post-hook "sudo /bin/systemctl restart httpd.service"`
+
+## MACのローカル環境での Laravel-Snappy-PDF / wkhtmltopdf の印刷機能
+１．/config/snappy.php の 'binary' のパス設定
+２．php artisan config:cache

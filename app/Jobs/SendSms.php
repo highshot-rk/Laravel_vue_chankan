@@ -10,7 +10,10 @@ use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Foundation\Bus\Dispatchable;
 
 /**
+ *
  * ショートメッセージ送信を行うジョブ
+ *
+ *
  */
 class SendSms implements ShouldQueue
 {

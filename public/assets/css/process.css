@@ -6,24 +6,28 @@ body {
 }
 
 a {
-  cursor: pointer;
+    cursor: pointer;
 }
 
 #proccess-header {
-    position: relative;
-    padding: 20px 0;
+    position: fixed;
+    width: 100%;
+    /* position: relative; */
+    height: 140px;
+    padding: 0;
     z-index: 100000;
+    margin-bottom: 0;
 }
 
 .proccess-header-inner {
-    padding: 0 20px;
+    padding: 60px 20px 40px;
 }
 
 /*-----------------------------------------------------------------------------------------
 
 
 
-  add
+    add
 
 
 
@@ -39,13 +43,24 @@ a {
 
 
 
-  common
+    common
 
 
 
 ------------------------------------------------------------------------------------------*/
+/* .proccess__main {
+    padding-top: 160px;
+    height: 100vh;
+} */
+.proccess__main {
+    position: fixed;
+    bottom: 0;
+    right: 0;
+    left: 0;
+    top: 140px;
+}
 .proccess__wrap {
-    padding: 0 20px;
+    padding: 0 20px 20px;
     height: 100%;
 }
 
@@ -57,162 +72,195 @@ a {
 
 
 
-  header
+    header
 
 
 
 ------------------------------------------------------------------------------------------*/
 .proccess__button li {
-  position: relative;
+    position: relative;
 }
 
 .proccess__button a {
-  position: relative;
-  display: block;
-  min-height: 40px;
-  height: 40px;
-  line-height: 40px;
-  padding: 0 20px;
-  background: #fff;
-  font-weight: 700;
+    position: relative;
+    display: block;
+    min-height: 40px;
+    height: 40px;
+    line-height: 40px;
+    padding: 0 20px;
+    background: #fff;
+    font-weight: 700;
 }
 
 .proccess__button a.calendarButton {
-  padding: 0;
+    padding: 0;
+    cursor: pointer;
 }
 
 .proccess__button .vdp-datepicker {
-  position: absolute;
-  top: 0;
-  left: 0;
-  right: 0;
-  bottom: 0;
-  height: 100%;
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    height: 100%;
 }
 
 .proccess__button .vdp-datepicker > div:not(.vdp-datepicker__calendar),
 .proccess__button .vdp-datepicker input {
-  display: block;
-  height: 100%;
+    display: block;
+    height: 100%;
+    cursor: pointer;
 }
 
 .proccess__back a {
-  font-size: 16px;
-  font-weight: 700;
-  color: #929FB5;
+    font-size: 14px;
+    font-weight: 700;
+    color: #929FB5;
 }
 
 .proccess__calendar li {
-  margin-right: 5px;
+    margin-right: 5px;
 }
 
 .proccess__calendar li:nth-child {
-  margin-right: 0;
+    margin-right: 0;
 }
 
 /*-----------------------------------------------------------------------------------------
 
 
 
-  main
+    main
 
 
 
 ------------------------------------------------------------------------------------------*/
 .process-table {
-  position: relative;
-  width: 100%;
-  height: -webkit-calc(100vh - 88px);
-  height: calc(100vh - 88px);
-  overflow-y: scroll;
-  -webkit-overflow-scrolling: touch;
+    position: relative;
+    width: 100%;
+    height: -webkit-calc(100vh - 88px);
+    height: calc(100vh - 88px);
+    overflow-y: scroll;
+    -webkit-overflow-scrolling: touch;
 }
+/* .process-table .sub-block {
+    background: #F1F3F6;
+    position: fixed;
+    left: 20px;
+    top: 80px;
+    width: 100px;
+    height: 45px;
+    z-index: 60000;
+}
+.process-table .sub-timeblock {
+    background: #fff;
+    position: fixed;
+    left: 120px;
+    top: 80px;
+    width: 120px;
+    height: 45px;
+    line-height: 45px;
+    font-weight: 700;
+    text-align: center;
+    z-index: 60000;
+    color: #929FB5;
+    border-right: 1px solid #F1F3F6;
+    border-bottom: 5px solid #F1F3F6;
+} */
 
 .process-table-tr {
-  display: -webkit-box;
-  display: -ms-flexbox;
-  display: flex;
-  border-bottom: 1px solid #F1F3F6;
+    display: -webkit-box;
+    display: -ms-flexbox;
+    display: flex;
+    border-bottom: 1px solid #F1F3F6;
 }
 
 .process-table-th.day {
-  position: sticky;
-  left: 0px;
-  z-index: 100;
+    position: sticky;
+    position: -webkit-sticky;
+    left: 0px;
+    z-index: 10001;
 }
 
 .process-table-th.first,
 .process-table-th.time {
-  position: sticky;
-  left: 100px;
-  z-index: 100;
+    position: sticky;
+    position: -webkit-sticky;
+    left: 120px;
+    z-index: 10001;
 }
 
 .process-table-thead {
-  position: sticky;
-  top: 0;
-  z-index: 10000;
-  padding-bottom: -50px;
-  padding-right: 20px;
+    position: sticky;
+    position: -webkit-sticky;
+    top: 0;
+    z-index: 2;
+    padding-bottom: -50px;
+    padding-right: 20px;
 }
 
 .process-table-thead .process-table-th {
-  width: 150px;
-  min-width: 150px;
-  height: 45px;
-  line-height: 45px;
-  border-right: 1px solid #F1F3F6;
-  text-align: center;
-  font-weight: 700;
-  border-bottom: 5px solid #F1F3F6;
+    width: 150px;
+    min-width: 150px;
+    height: 45px;
+    line-height: 45px;
+    border-right: 1px solid #F1F3F6;
+    text-align: center;
+    font-weight: 700;
+    border-bottom: 5px solid #F1F3F6;
 }
 
 .process-table-thead .process-table-th.day {
-  width: 100px;
-  min-width: 100px;
-  background: #F1F3F6;
+    width: 120px;
+    min-width: 120px;
+    background: #F1F3F6;
+    z-index: 50000;
 }
 
 .process-table-thead .process-table-th.first {
-  width: 120px;
-  min-width: 120px;
-  border-radius: 5px 0 0;
-  background: #fff;
+    width: 110px;
+    min-width: 110px;
+    border-radius: 5px 0 0;
+    background: #fff;
+    z-index: 50000;
 }
 
 .process-table-thead .process-table-th.name {
-  background: #fff;
+    background: #fff;
 }
 
 .process-table-tbody {
-  position: absolute;
-  top: 47px;
-  padding-right: 20px;
-  height: 500px;
-  height: -webkit-calc(100vh - 134px);
-  height: calc(100vh - 134px);
+    z-index: 1;
+    position: absolute;
+    top: 47px;
+    padding-right: 20px;
+    height: 500px;
+    height: -webkit-calc(100vh - 134px);
+    height: calc(100vh - 134px);
 }
 
 .process-table-tbody .process-table-tbody__content {
-  margin-top: -46px;
-  padding-top: 46px;
+    margin-top: -46px;
+    padding-top: 46px;
 }
 
 .process-table-tbody .process-table-th,
 .process-table-tbody .process-table-td {
-  height: 150px;
-  border-right: 1px solid #F1F3F6;
-  vertical-align: bottom;
+    height: 80px;
+    border-right: 1px solid #F1F3F6;
+    vertical-align: bottom;
 }
 
 .process-table-tbody .process-table-th {
-  width: 120px;
-  min-width: 120px;
+    width: 110px;
+    min-width: 110px;
 }
 
 .process-table-tbody .process-table-th.day {
-    width: 100px;
-    min-width: 100px;
+    width: 120px;
+    min-width: 120px;
+    text-align: left;
     font-weight: 700;
     color: #929FB5;
     background: #F1F3F6;
@@ -234,7 +282,7 @@ a {
 
 .work-field__time {
     width: 120px;
-    height: 150px;
+    height: 80px;
 }
 
 .work-field__time__inner {
@@ -263,12 +311,12 @@ a {
 
 .work-field__work {
     width: 150px;
-    height: 150px;
+    height: 80px;
     position: relative;
 }
 .work-field__work .work-field__work__inner {
     width: 140px;
-    height: 140px;
+    height: 70px;
     margin: auto;
     position: relative;
 }
@@ -296,13 +344,13 @@ a {
 .work-field__work__button {
     z-index: 1;
     position: absolute;
-    left: 10px;
-    right: 10px;
-    bottom: 10px;
-    top: 10px;
-    width: 130px;
-    height: 130px;
-    border: dashed 3px #EBEBEB;
+    left: 5px;
+    right: 5px;
+    bottom: 5px;
+    top: 5px;
+    width: 140px;
+    height: 70px;
+    border: dashed 2px #EBEBEB;
 }
 
 .work-field__work__button .work-field__work__button__inner {
@@ -323,14 +371,14 @@ a {
 }
 
 .work-field__work__button .add-button.work-add {
-  margin-bottom: 5px;
+    margin-bottom: 5px;
 }
 
 /*-----------------------------------------------------------------------------------------
 
 
 
-  main - memo
+    main - memo
 
 
 
@@ -346,7 +394,7 @@ a {
 }
 
 .memoContent .memoContent__inner {
-    overflow-y: scroll;
+    /* overflow-y: scroll; */
     word-break: break-all;
 }
 
@@ -380,7 +428,7 @@ a {
 
 .workContent__inner li:last-child {
     line-height: 1.2;
-    overflow-y: scroll;
+    /* overflow-y: scroll; */
 }
 
 .workContent__inner li a {
@@ -420,55 +468,51 @@ a {
     font-weight: 700;
 }
 
-.border-color__pink {
-    border-bottom: 1px solid #C96A6A;
-}
-
 .border-color.one {
-    border-bottom: 1px solid #ff0000;
+    border-bottom: 3px solid rgb(213, 0, 0);
 }
 
 .border-color.two {
-    border-bottom: 1px solid #ff00ff;
+    border-bottom: 3px solid rgb(230, 124, 115);
 }
 
 .border-color.three {
-    border-bottom: 1px solid #7f00ff;
+    border-bottom: 3px solid rgb(244, 81, 30);
 }
 
 .border-color.four {
-    border-bottom: 1px solid #0000ff;
+    border-bottom: 3px solid rgb(246, 191, 38);
 }
 
 .border-color.five {
-    border-bottom: 1px solid #007fff;
+    border-bottom: 3px solid rgb(51, 182, 121);
 }
 
 .border-color.six {
-    border-bottom: 1px solid #00ffff;
+    border-bottom: 3px solid rgb(11, 128, 67);
 }
 
 .border-color.seven {
-    border-bottom: 1px solid #00ff00;
+    border-bottom: 3px solid rgb(3, 155, 229);
 }
 
 .border-color.eight {
-    border-bottom: 1px solid #7fff00;
+    border-bottom: 3px solid rgb(63, 81, 181);
 }
 
 .border-color.nine {
-    border-bottom: 1px solid #ffff00;
+    border-bottom: 3px solid rgb(121, 134, 203);
 }
 
 .border-color.ten {
-    border-bottom: 1px solid #ff7f00;
+    border-bottom: 3px solid rgb(97, 97, 97);
 }
 
 /*-----------------------------------------------------------------------------------------
 
 
 
-  modal
+    modal
 
 
 
@@ -545,46 +589,6 @@ a {
     cursor: pointer;
     pointer-events: none;
     border-radius: 3px;
-}
-
-.selectColor .colorBox.one label {
-    background: #ff0000;
-}
-
-.selectColor .colorBox.two label {
-    background: #ff00ff;
-}
-
-.selectColor .colorBox.three label {
-    background: #7f00ff;
-}
-
-.selectColor .colorBox.four label {
-    background: #0000ff;
-}
-
-.selectColor .colorBox.five label {
-    background: #007fff;
-}
-
-.selectColor .colorBox.six label {
-    background: #00ffff;
-}
-
-.selectColor .colorBox.seven label {
-    background: #00ff00;
-}
-
-.selectColor .colorBox.eight label {
-    background: #7fff00;
-}
-
-.selectColor .colorBox.nine label {
-    background: #ffff00;
-}
-
-.selectColor .colorBox.ten label {
-    background: #ff7f00;
 }
 .content__submit .submit__box {
     width: 220px;

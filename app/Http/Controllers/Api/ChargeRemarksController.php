@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Api;
 use Auth;
 use App\ChargeRemark;
 use Illuminate\Http\Request;
+use App\Services\AuthService;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\ChargeRemarkRequest;
 use App\Http\Resources\ChargeRemarkResource;
@@ -27,11 +28,15 @@ class ChargeRemarksController extends ApiBaseController
     public function store(ChargeRemarkRequest $request)
     {
         $chargeRemark = new ChargeRemark();
+        $charegeId = $request->worker_id;
+        if (empty($charegeId)) {
+            $charegeId = 0;
+        }
 
         // メモの情報を保存する
         $chargeRemark->fill([
-            'user_id'   => $request->user()->id,  // ユーザーID
-            'charge_id' => $request->charge_id,   // 担当者
+            'user_id'   => AuthService::getAuthUser()->id,  // ユーザーID
+            'charge_id' => $charegeId,   // 担当者
             'work_on'   => $request->work_on,     // 日付
             'time_type' => $request->time_type,   // AM・PM・未定
             'remarks'   => $request->remarks      // メモ内容

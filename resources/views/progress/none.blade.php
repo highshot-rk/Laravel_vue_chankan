@@ -44,8 +44,8 @@ $lineMessate = str_replace("#", "%0D%0A", $body);
 						<div class="content__section">
 							<div class="content__header">
 								<div class="content__title">
-	                                <h1 class="h1">現場終了済み</h1>
-	                                <span class="en">Project Finish</span>
+                                    <h1 class="h1">現場終了済み</h1>
+                                    <span class="en">Project Finish</span>
 								</div>
 							</div>
 
@@ -53,19 +53,19 @@ $lineMessate = str_replace("#", "%0D%0A", $body);
 								<div class="content__floar__inner">
 									<div class="content__box">
 										<div class="content__box__inner">
-											<div class="content__text">
-	                                            @if ($isFinishedReported)
-	                                            <p>
-	                                                お疲れ様でした。<br>
-	                                                本日の作業はこれにて、終了となります。
-	                                            </p>
-	                                            @else
-												<p>この案件は終了しています。</p>
-												<ul>
-													<li>{{ $project->name }}</li>
-													<li>{{ $project->address }}</li>
-	                                            </ul>
-	                                            @endif
+                                            <div class="content__text">
+                                                @if ($isFinishedReported)
+                                                <p>
+                                                    本日もお疲れ様でした。<br>
+                                                    本日の作業はこれにて終了となります。
+                                                </p>
+                                                @else
+                                                <p>この案件は終了しています。</p>
+                                                <ul>
+                                                    <li>{{ $project->name }}</li>
+                                                    <li>{{ $project->address }}</li>
+                                                </ul>
+                                                @endif
 											</div>
 										</div>
 									</div>
@@ -75,7 +75,7 @@ $lineMessate = str_replace("#", "%0D%0A", $body);
 						<div class="content__submit f__center">
                             @guest
 							<div class="submit__box line">
-	                            <a href="http://line.me/R/msg/text/?<?= $lineMessate; ?>" target="_blank" rel="noopener noreferrer">カットビのシステムを<br>友達に紹介する</a>
+                                <a href="http://line.me/R/msg/text/?<?= $lineMessate; ?>" target="_blank" rel="noopener noreferrer">カットビのシステムを<br>友達に紹介する</a>
                             </div>
                             @endguest
 						</div>

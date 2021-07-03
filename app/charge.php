@@ -25,8 +25,7 @@ class Charge extends Authenticatable
      */
     public static function search($params, $user_id)
     {
-        // return self::ofUserId($user_id)->orderBy('sort', 'ASC')->orderBy('updated_at', 'DESC');
-        return self::ofUserId($user_id)->orderBy('is_parent', 'DESC');
+        return self::ofUserId($user_id)->orderBy('sort', 'ASC')->orderBy('updated_at', 'DESC');
     }
 
     /**

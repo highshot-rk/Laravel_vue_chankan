@@ -21,12 +21,13 @@
                             <div class="content__box__inner">
                                 <div class="content__input">
                                     <div class="headline attention must">メールアドレス</div>
-                                    <div class="input__box">
-                                        <input class="bgType" type="email" name="" v-model="user.email">
+                                    <div v-if="user" class="input__box">
+                                        <input class="bgType" type="email" v-model="user.email">
                                     </div>
                                 </div>
+                                <!--
                                 <div class="content__input">
-                                    <!-- <div class="headline attention must">担当者</div> -->
+                                    <div class="headline attention must">担当者</div>
                                     <div class="input__wrap">
                                         <template v-for="(option, index) in charges">
                                             <div class="content__input__box">
@@ -77,38 +78,49 @@
                                         <span></span>
                                     </div>
                                 </div>
+                                -->
                                 <div class="content__input">
                                     <div class="headline attention must">会社名（屋号）</div>
                                     <div class="input__wrap">
-                                        <div class="input__box">
-                                            <input class="bgType" type="text" name="" v-model="user.company">
+                                        <div v-if="user" class="input__box">
+                                            <input class="bgType" type="text" v-model="user.company">
                                         </div>
                                     </div>
                                 </div>
                                 <div class="content__input">
                                     <div class="headline attention must">代表者の電話番号（ハイフン不要）</div>
                                     <div class="input__wrap">
-                                        <div class="input__box">
-                                            <input class="bgType" type="text" name="" v-model="user.phone">
+                                        <div v-if="user" class="input__box">
+                                            <input class="bgType" type="text" v-model="user.phone">
                                         </div>
                                     </div>
                                 </div>
                                 <div class="content__input">
                                     <div class="headline attention must">都道府県</div>
                                     <div class="input__wrap">
-                                        <div class="input__box selectBox">
-                                            <select class="bgType" name="" v-model="user.prefecture.id">
-                                                <template v-for="option in prefectures">
+                                        <div v-if="user" class="input__box selectBox">
+                                            <select class="bgType" v-model="user.prefecture.id">
+                                                <!-- <template v-for="option in prefectures">
                                                     <option :value="option.id">{{ option.name }}</option>
-                                                </template>
+                                                </template> -->
+                                                <option
+                                                    v-for="(option, index) in prefectures"
+                                                    :key="index"
+                                                    :value="option.id"
+                                                >
+                                                    {{ option.name }}
+                                                </option>
                                             </select>
                                         </div>
                                     </div>
                                 </div>
                                 <div class="content__input">
                                     <div class="rememberCheckbox">
-                                        <label type="checkbox">
-                                            <input type="checkbox" name="" v-model="user.enable_sms">
+                                        <label v-if="user" type="checkbox">
+                                            <input
+                                                type="checkbox"
+                                                v-model="user.enable_sms"
+                                            >
                                             <span>SMSの送信を許可する</span>
                                         </label>
                                     </div>
@@ -120,7 +132,13 @@
             </div>
             <div class="content__submit f__center">
                 <div class="submit__box">
-                    <button class="clickonce" type="button" name="" @click="confirm">会員情報更新</button>
+                    <button
+                        class="clickonce"
+                        type="button"
+                        @click="confirm"
+                    >
+                        会員情報更新
+                    </button>
                 </div>
             </div>
         </div>
@@ -139,37 +157,39 @@
         },
         props: {
             id: {
-                type: Number
+                type: Number,
+                require: true
             },
         },
         data() {
             // 必要に応じて変数を定義
             return {
                 user:               null,
-                charges:            [],
+                // charges:            [],
                 prefectures:        null,
-                deleted_charge_ids: []
+                // deleted_charge_ids: []
             }
         },
         created: function() {
             // 必要に応じて、初期表示時に使用するLaravelのAPIを呼び出すメソッドを定義
-
             // ユーザー詳細を取得する
-            axios.get('/api/users/'+this.id, {})
+            axios
+                .get('/api/users/'+this.id, {})
                 .then(result => {
                     this.user    = result.data
-                    this.charges = result.data.charges
-                    this.charges.forEach((charge, index, list) => {
-                        if (charge.user_id == this.id) {
-                            this.charges.splice(index, 1)
-                        }
-                    })
+                    // this.charges = result.data.charges
+                    // this.charges.forEach((charge, index, list) => {
+                    //     if (charge.user_id == this.id) {
+                    //         this.charges.splice(index, 1)
+                    //     }
+                    // })
                 })
                 .catch(result => {
                     alert('会員詳細取得時にエラーが発生しました。')
                 })
             // 都道府県を取得する
-            axios.get('/api/prefectures', {})
+            axios
+                .get('/api/prefectures', {})
                 .then(result => {
                     this.prefectures = result.data
                 })
@@ -179,11 +199,9 @@
         },
         computed: {
             // 必要に応じてメソッドを定義
-
         },
         methods: {
             // 必要に応じて、ボタン押下時などに呼び出すLaravelのAPIを呼び出すメソッドを定義
-
             // ボタン押下時、確認メッセージを表示する
             confirm: function() {
                 this.$refs.modal.openModal()
@@ -191,15 +209,18 @@
             // ユーザー情報を更新する
             updateUser: function() {
                 const params = {
-                    user              : this.user,
-                    charges           : this.charges,
-                    deleted_charge_ids: this.deleted_charge_ids
+                    user : this.user,
+                    // charges           : this.charges,
+                    // deleted_charge_ids: this.deleted_charge_ids
                 }
-                axios.put('/api/users/'+this.id, params)
+                axios
+                    .put('/api/users/'+this.id, params)
                     .then(result => {
+                        console.log(result)
                         alert('会員情報を更新しました。')
                     })
                     .catch(result => {
+                        console.log(result)
                         errorHandling.errorMessage(result)
                     })
             },
@@ -207,13 +228,12 @@
                 const params = {
                     name: '',
                 }
-                this.charges.push(params)
+                // this.charges.push(params)
             },
             deleteCharge: function(index) {
                 this.deleted_charge_ids.push(this.charges[index].id)
                 this.charges.splice(index, 1)
             }
-
         },
         watch: {
             // 必要に応じてメソッドを定義

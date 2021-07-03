@@ -103,7 +103,14 @@
             </div>
             <div class="content__submit f__center">
                 <div class="submit__box">
-                    <input class="clickonce" type="submit" name="" value="編集内容を登録する" @click="confirm">
+                    <button
+                        @click.prevent="confirm"
+                        class="clickonce"
+                        type="button"
+                    >
+                        編集内容を登録する
+                    </button>
+                    <!-- <input class="clickonce" type="submit" name="" value="編集内容を登録する" @click="confirm"> -->
                 </div>
             </div>
         </div>

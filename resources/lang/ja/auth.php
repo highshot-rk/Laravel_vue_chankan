@@ -12,8 +12,6 @@ return [
     | these language lines according to your application's requirements.
     |
     */
-
     'failed' => 'メールアドレスまたはパスワードが一致しません。',
     'throttle' => 'ログイン試行の失敗回数が一定数を超えた為、しばらくログイン操作ができません。',
-
 ];

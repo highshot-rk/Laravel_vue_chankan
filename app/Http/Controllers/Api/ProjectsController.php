@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Api;
 
 use App\Project;
+use App\Charge;
 use Carbon\Carbon;
 use App\ProjectLabel;
 use App\ProjectOrderer;
@@ -27,8 +28,11 @@ class ProjectsController extends ApiBaseController
      */
     public function index(Request $request)
     {
+        // 対象のユーザーのIDを取得する
         $user_id = AuthService::getAuthUser()->id;
         return new ProjectResource(Project::search($request->all(), $user_id)->get());
+        // $projects = Project::where('user_id', $user_id)->get();
+        // return new ProjectResource($projects );
     }
 
     /**
@@ -64,6 +68,7 @@ class ProjectsController extends ApiBaseController
     {
         \DB::transaction(function () use ($id) {
             $project = Project::find($id);
+            print("-------------------");
             // 案件ラベルに紐づく案件が未解体案件のみの場合、未解体案件と案件ラベルも削除する
             if (count($project->projectLabel->projects) === 1) {
                 if ($project->projectLabel->project->project_type === config('const.project.type.undisassembled')) {
@@ -73,12 +78,20 @@ class ProjectsController extends ApiBaseController
             } elseif ($project->project_type === config('const.project.type.erection')) {
                 if (count($project->projectLabel->projects()->ofProjectType([config('const.project.type.erection')])->get()) === 1) {
                     // 同じラベルの案件内で他に架設案件がなければ、未解体案件と案件ラベルも同時に削除する
-                    $project->projectLabel->projects()->ofProjectType([config('const.project.type.undisassembled')])->delete();
+                    // $project->projectLabel->projects()->ofProjectType([config('const.project.type.undisassembled')])->delete();
+                    $project->projectLabel->projects()->delete();
+                    $project->projectLabel->delete();
+                } else {
+                    $project->projectLabel->projects()->delete();
                     $project->projectLabel->delete();
                 }
             } elseif ($project->project_type === config('const.project.type.disassembled')) {
                 // 同じラベルの案件内で他に案件がなければ、案件ラベルも同時に削除する
                 if (count($project->projectLabel->projects()->get()) <= 1) {
+                    $project->projectLabel->delete();
+                } else {
+                    // Project::where("name", $project->name)->where() $project
+                    $project->projectLabel->projects()->delete();
                     $project->projectLabel->delete();
                 }
             }
@@ -195,7 +208,8 @@ class ProjectsController extends ApiBaseController
      * @param integer $id
      * @return json
      */
-    public function updateErection(ProjectRequest $request, $id) {
+    public function updateErection(ProjectRequest $request, $id)
+    {
         $projectId = $this->_updateProject($request, $id);
         return response()->json(['id' => $projectId]);
     }
@@ -207,7 +221,8 @@ class ProjectsController extends ApiBaseController
      * @param integer $id
      * @return json
      */
-    public function updateLineInfo(Request $request, $id) {
+    public function updateLineInfo(Request $request, $id)
+    {
         $project = Project::find($id);
         $project->last_messaged_at = Carbon::now();
         $project->save();
@@ -221,7 +236,8 @@ class ProjectsController extends ApiBaseController
      * @param integer $id
      * @return json
      */
-    public function updateRemark(Request $request, $id) {
+    public function updateRemark(Request $request, $id)
+    {
         $project = Project::find($id);
         $project->remark = $request->remark;
         $project->save();
@@ -259,7 +275,7 @@ $project->projectOrderer->company.' 様
 
 【オススメ足場業者】
 '.route('sponsor.index');
-                SmsService::sendToProjectOrderer($id, $type, $message);
+            SmsService::sendToProjectOrderer($id, $type, $message);
             }
         });
         return response()->noContent();
@@ -274,26 +290,17 @@ $project->projectOrderer->company.' 様
     public function start($id)
     {
         // 2テーブル以上の登録or更新がある為、トランザクションを張る
-        \DB::transaction(function () use ($id) {
+        \DB::transaction(function () use ($id)
+        {
             // 案件情報のステータスを更新
             $project = Project::find($id);
             $project->is_started = true;
             $project->started_at = Carbon::now();
             $project->save();
-            // ショートメッセージを送信
+            // 元請け：ショートメッセージを送信
             if ($project->user->enable_sms == 1) {
                 $type    = config('const.sms.type.start');
-                $message =
-$project->projectOrderer->company.' 様
-
-作業開始のご連絡をさせていただきます。
-
-案件名：'.$project->name.'
-作業開始時刻：'.$project->started_at->format('H:i').'
-
-【オススメ足場業者】
-'.route('sponsor.index');
-                SmsService::sendToProjectOrdererAndCharge($id, $type, $message);
+                SmsService::sendToProjectOrdererAndCharge($id, $type);
             }
         });
         return response()->noContent();
@@ -308,15 +315,20 @@ $project->projectOrderer->company.' 様
     public function fin(ProjectFinishRequest $request, $id)
     {
         // 2テーブル以上の登録or更新がある為、トランザクションを張る
-        \DB::transaction(function () use ($request, $id) {
+        \DB::transaction(function () use ($request, $id)
+        {
             $url = null;
             // ファイルをアップロード
-            if ($request->hasFile('image')) {
-                $url   = $request->image->store('/img/projects');
-            }
+            // if ($request->hasFile('image')) {
+            //     $url = $request->image->store('/public/img/projects');
+            // }
             // 案件情報のステータスを更新
             $project = Project::find($id);
-            $project->finish_img  = $url;
+            // $project->finish_img = $url;
+            if ($request->hasFile('image')) {
+                $url = $request->image->store('/public/img/projects');
+                $project->finish_img = str_replace("public", "storage", $url);
+            }
             $project->is_finished = true;
             $project->finished_at = Carbon::now();
             $project->save();
@@ -334,8 +346,7 @@ $project->projectOrderer->company.' 様
 
 【オススメ足場業者】
 '.route('sponsor.index');
-
-                SmsService::sendToProjectOrdererAndCharge($id, $type, $message);
+            SmsService::sendFinToProjectOrdererAndCharge($id, $type, $message);
             }
         });
         return response()->noContent();
@@ -348,7 +359,8 @@ $project->projectOrderer->company.' 様
      * @param integer $id
      * @return void
      */
-    private function _updateProject(ProjectRequest $request, $id) {
+    private function _updateProject(ProjectRequest $request, $id)
+    {
         return \DB::transaction(function () use ($request, $id) {
             $originalProject = Project::find($id);
             $userId          = AuthService::getAuthUser()->id;

@@ -15,19 +15,27 @@
 						<div class="input__wrap">
 							<div class="input__box selectBox">
 								<select class="bgType" name="" v-model="project.charge_id" required>
+                                    <template v-for="(charge, index) in charges">
 									<!-- <template v-for="item in charges"> -->
 										<!-- <option :label="item.name" :value="item.id" :key="item.name">{{ item.name }}</option> -->
-									<option v-for="(item, index) in charges" :key="index" :value="item.id">{{item.name}}</option>
+									<!-- <option v-for="(charge, index) in charges" :key="charge.id" :value="charge.id">{{charge.name}}</option> -->
+                                        <option v-if="charge.edit_type == 0" ::label="charge.name" :key="charge.id" :value="charge.id">{{charge.name}}</option>
+                                    </template>
+                                    <option label="未定" :value="0">未定</option>
 								</select>
 							</div>
 						</div>
 					</div>
 					<div class="content__input">
 						<div class="headline attention any">作業員</div>
-						<div class="input__box">
-							<!-- <input class="bgType" type="text" name="" v-model="project.name" required> -->
-							<input class="bgType" type="text" v-model="project.worker" name="">
-						</div>
+                        <div class="input__box selectBox">
+                        <!-- <input class="bgType" type="text" name="" v-model="project.name" required> -->
+                            <select class="bgType" name="" v-model="project.worker_id">
+                                <template v-for="(charge, index) in charges">
+                                    <option :label="charge.name" :key="charge.id" :value="charge.id">{{charge.name}}</option>
+                                </template>
+                            </select>
+                        </div>
 					</div>
 					<!-- <template v-if="project.enable_sms === 1 && mode !== 'advance_notice'"> -->
 					<template>
@@ -44,7 +52,10 @@
 						</div>
 					</template>
 					<div class="content__input">
-						<div class="headline attention must">施工予定日</div>
+						<div class="headline attention must">
+                            <span v-if="mode !== 'advance_notice'">施工予定日</span>
+                            <span v-else>到着予定時間</span>
+                        </div>
                         <div class="input__wrap delete__wrap flex__wrap f__start v__center" v-for="(item, index) in work_on_array" :key="index">
                             <div class="input__box year">
                                 <select
@@ -160,7 +171,7 @@
 						<div class="input__wrap">
 							<div class="input__box">
 								<!-- <input class="bgType" type="text" name="" v-model="project.address"> -->
-								<input class="bgType" type="text" name="" v-model="project.address">
+								<input class="bgType" type="text" name="" v-model="project.address" required>
 							</div>
 						</div>
 					</div>
@@ -191,19 +202,16 @@
 						<div class="input__box">
 							<!-- <textarea class="bgType" name="" placeholder="南面が狭小の為、近隣に注意して作業してください。" v-model="project.remark"></textarea> -->
 							<ul class="flex__wrap selectColor">
-								<li class="colorBox one">
-									<input type="radio" v-model="project.process_color_id" value="1" name="colorGroup">
-									<label></label>
-								</li>
-								<li class="colorBox two"><input type="radio" v-model="project.process_color_id" value="2" name="colorGroup"><label></label></li>
-								<li class="colorBox three"><input type="radio" v-model="project.process_color_id" value="3" name="colorGroup"><label></label></li>
-								<li class="colorBox four"><input type="radio" v-model="project.process_color_id" value="4" name="colorGroup"><label></label></li>
-								<li class="colorBox five"><input type="radio" v-model="project.process_color_id" value="5" name="colorGroup"><label></label></li>
-								<li class="colorBox six"><input type="radio" v-model="project.process_color_id" value="6" name="colorGroup"><label></label></li>
-								<li class="colorBox seven"><input type="radio" v-model="project.process_color_id" value="7" name="colorGroup"><label></label></li>
-								<li class="colorBox eight"><input type="radio" v-model="project.process_color_id" value="8" name="colorGroup"><label></label></li>
-								<li class="colorBox nine"><input type="radio" v-model="project.process_color_id" value="9" name="colorGroup"><label></label></li>
-								<li class="colorBox ten"><input type="radio" v-model="project.process_color_id" value="10" name="colorGroup"><label></label></li>
+								<li class="colorBox one"><input type="radio" ref="color1" v-model="project.process_color_id" value="1" name="colorGroup" @click="radioDeselection(1)"><label></label></li>
+								<li class="colorBox two"><input type="radio" ref="color2" v-model="project.process_color_id" value="2" name="colorGroup" @click="radioDeselection(2)"><label></label></li>
+								<li class="colorBox three"><input type="radio" ref="color3" v-model="project.process_color_id" value="3" name="colorGroup" @click="radioDeselection(3)"><label></label></li>
+								<li class="colorBox four"><input type="radio" ref="color4" v-model="project.process_color_id" value="4" name="colorGroup" @click="radioDeselection(4)"><label></label></li>
+								<li class="colorBox five"><input type="radio" ref="color5" v-model="project.process_color_id" value="5" name="colorGroup" @click="radioDeselection(5)"><label></label></li>
+								<li class="colorBox six"><input type="radio" ref="color6" v-model="project.process_color_id" value="6" name="colorGroup" @click="radioDeselection(6)"><label></label></li>
+								<li class="colorBox seven"><input type="radio" ref="color7" v-model="project.process_color_id" value="7" name="colorGroup" @click="radioDeselection(7)"><label></label></li>
+								<li class="colorBox eight"><input type="radio" ref="color8" v-model="project.process_color_id" value="8" name="colorGroup" @click="radioDeselection(8)"><label></label></li>
+								<li class="colorBox nine"><input type="radio" ref="color9" v-model="project.process_color_id" value="9" name="colorGroup" @click="radioDeselection(9)"><label></label></li>
+								<li class="colorBox ten"><input type="radio" ref="color10" v-model="project.process_color_id" value="10" name="colorGroup" @click="radioDeselection(10)"><label></label></li>
 							</ul>
 						</div>
 					</div>
@@ -229,14 +237,14 @@
 							<div class="content__input">
 								<div class="headline attention must">会社名</div>
 								<div class="input__box">
-									<input class="bgType" type="" name="" v-model="project_orderer.company" :required="is_new_project_orderer">
+									<input class="bgType" type="text" name="" v-model="project_orderer.company" :required="is_new_project_orderer">
 								</div>
 							</div>
 							<div class="content__input" v-if="!is_tel">
 								<div class="headline attention must">電話番号</div>
 								<div class="advice">（電話番号を登録すると、作業報告通知が自動で行われます。）</div>
 								<div class="input__box">
-									<input class="bgType" type="" name="" v-model="project_orderer.phone" :required="!is_new_project_orderer">
+									<input class="bgType" type="text" name="" v-model="project_orderer.phone" :required="!is_new_project_orderer">
 								</div>
 							</div>
 							<div class="content__confirmation">
@@ -291,6 +299,7 @@
 								class="bgType"
                                 @selected="workOnFromSelected"
                                 v-model="pdf.work_on_from_original"
+                                :required = true
 							>
 							</vuejs-datepicker>
 							<input type="" name="" class="bgType" v-model="pdf.work_on_from">
@@ -310,6 +319,15 @@
 							<input type="" name="" class="bgType" v-model="pdf.work_on_to">
 						</div>
 					</div>
+					<div class="content__input">
+						<div class="headline attention any">案件がない日付も出力</div>
+						<div class="content__confirmation">
+							<label class="checkbox__label">出力する
+								<input type="checkbox" name="" v-model="pdf.is_all_day">
+								<div class="checkbox__block"></div>
+							</label>
+						</div>
+					</div>
 					<div class="content__submit f__center">
 						<div class="submit__box">
 							<button type="submit">印刷</button>
@@ -327,6 +345,14 @@
     import errorHandling from '../../utilities/handling'
 
 	export default {
+        props: {
+            loginId: {
+                type: String
+            },
+            isCharge: {
+                type: String
+            },
+        },
 		components: {
 			'vuejs-datepicker': vuejsDatepicker
 		},
@@ -340,26 +366,32 @@
                 pdf: {
                     work_on_from: '',
                     work_on_to: '',
+                    is_all_day: false,
                 },
+                checkRadio: '',
             }
         },
-		mounted: function() {
-        },
+        created: function() {},
+        beforeDestroy: function() {},
+		mounted: function() {},
 		updated: function() {
             let infoId = this.$store.state.infoId;
             if (this.$store.state.isWorkModalActive === false || infoId === undefined || infoId.calendarId === undefined || infoId.calendarId === "" || this.$store.state.isWorkLoading) {
                 return;
             }
-            let project = this.$store.state.calendars[infoId.calendarId][infoId.columnStatus][infoId.lineId].works[infoId.memberId];
+            var project = undefined
+            if (this.$store.state.calendars[infoId.calendarId][infoId.columnStatus]) {
+                project = this.$store.state.calendars[infoId.calendarId][infoId.columnStatus][infoId.lineId].works[infoId.memberId];
+            }
             if (project !== undefined) {
-                console.log('ok');
+                // 案件が登録済みの場合
                 axios.get('/api/projects/' + project.projectId, {})
                     .then(result => {
                         result = result.data;
                         this.project = {
                             name: result.name,
                             charge_id: result.charge.id,
-                            worker: result.worker,
+                            worker_id: result.worker,
                             is_send_to_charge: false,
                             tel: result.tel,
                             zip: result.zip,
@@ -374,14 +406,38 @@
                         this.work_on_array[0].time_type = result.time_type;
                         this.zip_first = result.zip.substring(0, 3);
                         this.zip_second = result.zip.substring(3, 7);
+                        this.checkRadio = (result.process_color_id == null || result.process_color_id == undefined) ? "" : result.process_color_id;
                     })
                     .catch(result => {
                         console.log('err', result);
                     });
                 this.$store.commit('setIsWorkLoading',true);
+            } else if(project == undefined) {
+                // 案件が未登録の場合
+                // 案件の道路規制の初期表示
+                this.project.road = 0
+                // 作業員の初期表示
+                // if(this.isCharge == 1) {
+                //     // 担当者のページの場合
+                //     this.project.worker_id = this.loginId
+                // } else if(this.isCharge !== 1) {
+                //     // ユーザーのページの場合
+                //     this.project.worker_id = this.$store.state.managerLists[0]['id']
+                // }
             }
         },
 		methods: {
+            // ラジオボタンのcheckedを外す
+            radioDeselection: function(e) {
+                // console.log(this.$refs['color' + e].checked);
+                if(this.checkRadio == this.$refs['color' + e]) {
+                    this.$refs['color' + e].checked = false
+                    this.checkRadio = ''
+                    this.project.process_color_id = ''
+                } else {
+                    this.checkRadio = this.$refs['color' + e];
+                }
+            },
 			// 施工予定日のカレンダー
             doOpen: function(index){
                 if(!this.$refs['picker' + index][0].isOpen) {
@@ -459,7 +515,8 @@
             },
             // PDFを新しいタブで開く
             pdfDownload: function() {
-                const url = '/pdf?work_on_from=' + this.pdf.work_on_from + '&work_on_to=' + this.pdf.work_on_to
+				const isAllDay = this.pdf.is_all_day ? 1 : 0
+                const url = '/pdf?work_on_from=' + this.pdf.work_on_from + '&work_on_to=' + this.pdf.work_on_to+ '&is_all_day=' + isAllDay
                 window.open(url, '_blank')
             },
             // 施工予定日の欄を追加する
@@ -523,9 +580,9 @@
                 get() {return this.$store.state.charge_id},
                 set(val) { this.$store.commit('setChargeId', val)}
             },
-            worker: {
-                get() {return this.$store.state.worker},
-                set(val) { this.$store.commit('setWorker', val)}
+            worker_id: {
+                get() {return this.$store.state.worker_id},
+                set(val) { this.$store.commit('setWorkerId', val)}
             },
             is_send_to_charge: {
                 get() {return this.$store.state.is_send_to_charge},
@@ -559,6 +616,10 @@
                 get() {return this.$store.state.project_orderer},
                 set(val) { this.$store.commit('setProjectOrderer', val)}
             },
+            // project_charge: {
+            //     get() {return this.$store.state.project_orderer},
+            //     set(val) { this.$store.commit('setProjectCharge', val)}
+            // },
             company: {
                 get() {return this.$store.state.company},
                 set(val) { this.$store.commit('setCompany', val)}

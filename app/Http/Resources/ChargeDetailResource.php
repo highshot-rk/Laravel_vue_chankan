@@ -14,12 +14,30 @@ class ChargeDetailResource extends JsonResource
      */
     public function toArray($request)
     {
-        return [
-            'id'                 => $this->id,
-            'user'               => $this->user,
-            'name'               => $this->name,
-            'created_at'         => $this->created_at,
-            'updated_at'         => $this->updated_at,
-        ];
+        if(is_countable($this->projects)) {
+            return [
+                'id'                 => $this->id,
+                'user'               => $this->user,
+                'is_parent'          => $this->is_parent,
+                'name'               => $this->name,
+                'phone'              => $this->phone,
+                'edit_type'          => $this->edit_type,
+                'created_at'         => $this->created_at,
+                'updated_at'         => $this->updated_at,
+                'has_project'        => count($this->projects) > 0 ? true : false,
+            ];
+        } else {
+            return [
+                'id'                 => $this->id,
+                'user'               => $this->user,
+                'is_parent'          => $this->is_parent,
+                'name'               => $this->name,
+                'phone'              => $this->phone,
+                'edit_type'          => $this->edit_type,
+                'created_at'         => $this->created_at,
+                'updated_at'         => $this->updated_at,
+                'has_project'        => false,
+            ];   
+        }
     }
 }

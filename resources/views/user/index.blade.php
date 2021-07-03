@@ -30,19 +30,19 @@
 											<div class="content__input">
 												<div class="headline">担当者名</div>
 												<div class="input__text">
-	                                                <span>{{ $loginCharge->name }}</span><br>
+                                                    <span>{{ $loginCharge->name }}</span><br>
 												</div>
 											</div>
-											<div class="content__input">
+											{{--  <div class="content__input">
 												<div class="headline">担当者メールアドレス</div>
 												<div class="input__text">
-	                                                <span>{{ $loginCharge->email }}</span><br>
+                                                    <span>{{ $loginCharge->email }}</span><br>
 												</div>
-											</div>
+											</div>  --}}
 											<div class="content__input">
-												<div class="headline">担当者携帯電話</div>
+												<div class="headline">担当者電話番号</div>
 												<div class="input__text">
-	                                                <span>{{ $loginCharge->phone }}</span><br>
+                                                    <span>{{ $loginCharge->phone }}</span><br>
 												</div>
 											</div>
 											<div class="content__input">
@@ -73,29 +73,31 @@
 									<div class="content__box">
 										<div class="content__box__inner">
 											<div class="content__input">
-												<div class="headline">担当者名</div>
+												<div class="headline">名前</div>
 												<div class="input__text">
-													<span>@foreach ($user->charges as $charge){{ $charge->name }}<br>@endforeach</span>
+													<span>{{ $user->name }}</span>
 												</div>
 											</div>
 											<div class="content__input">
-												<div class="headline">担当者メールアドレス</div>
+												<div class="headline">メールアドレス</div>
 												<div class="input__text">
-													<span>@foreach ($user->charges as $charge){{ $charge->email }}<br>@endforeach</span>
+													<span>{{ $user->email }}</span>
 												</div>
 											</div>
 											<div class="content__input">
-												<div class="headline">担当者携帯電話</div>
+												<div class="headline">代表者携帯電話</div>
 												<div class="input__text">
-													<span>@foreach ($user->charges as $charge){{ $charge->phone }}<br>@endforeach</span>
+													<span>{{ $user->phone }}</span>
 												</div>
-											</div>
+                                            </div>
+                                            {{--
 											<div class="content__input">
 												<div class="headline">担当者タイプ</div>
 												<div class="input__text">
-													<span>@foreach ($user->charges as $charge){{ $charge->editType() }}<br>@endforeach</span>
+                                                    <span>@foreach ($user->charges as $charge){{ $charge->editType() }}<br>@endforeach</span>
 												</div>
-											</div>
+                                            </div>
+                                            --}}
 											<div class="content__input">
 												<div class="headline">パスワード</div>
 												<div class="input__text">
@@ -106,18 +108,6 @@
 												<div class="headline">会社名（屋号）</div>
 												<div class="input__text">
 													<span>{{ $user->company }}</span>
-												</div>
-											</div>
-											<div class="content__input">
-												<div class="headline">メールアドレス</div>
-												<div class="input__text">
-													<span>{{ $user->email }}</span>
-												</div>
-											</div>
-											<div class="content__input">
-												<div class="headline">代表者の電話番号</div>
-												<div class="input__text">
-													<span>{{ $user->phone }}</span>
 												</div>
 											</div>
 											<div class="content__input">

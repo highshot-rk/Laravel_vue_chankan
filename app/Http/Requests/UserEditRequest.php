@@ -16,7 +16,6 @@ class UserEditRequest extends FormRequest
         if (\Auth::guard('charge')->check()) {
             return [
                 'name'               => 'required|max:255',
-                'email'              => 'required|email|max:255',
                 'phone'              => 'required|max:16',
             ];
         }
@@ -43,7 +42,7 @@ class UserEditRequest extends FormRequest
             'prefecture_id'      => '都道府県',
             'charge.*.name'      => '担当者名',
             'charge.*.phone'     => '担当者携帯番号',
-            'charge.*.email'     => '担当者携帯番号',
+            'charge.*.email'     => '担当者メールアドレス',
             'charge.*.edit_type' => '担当者タイプ',
         ];
     }

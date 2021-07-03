@@ -11,15 +11,21 @@
                     <div class="content__wrap">
                         <!-- スマホ表示 -->
                         <div class="tab">
-                            <daily-project-sp-component work-on="{{ $workOn }}" is-charge="{{ $isCharge }}"
-                                is-viewer="{{ $isViewer }}" url-prefix="{{ $urlPrefix }}">
-                            </daily-project-sp-component>
+                            <daily-project-sp-component
+                                work-on="{{ $workOn }}"
+                                is-charge="{{ $isCharge }}"
+                                is-viewer="{{ $isViewer }}"
+                                url-prefix="{{ $urlPrefix }}"
+                            />
                         </div>
+                        <!-- PC表示 -->
                         <div class="pc">
-                            <!-- PC表示 -->
-                            <daily-project-pc-component work-on="{{ $workOn }}" is-charge="{{ $isCharge }}"
-                                is-viewer="{{ $isViewer }}" url-prefix="{{ $urlPrefix }}">
-                            </daily-project-pc-component>
+                            <daily-project-pc-component
+                                work-on="{{ $workOn }}"
+                                is-charge="{{ $isCharge }}"
+                                is-viewer="{{ $isViewer }}"
+                                url-prefix="{{ $urlPrefix }}"
+                            />
                         </div>
                     </div>
                 </div>

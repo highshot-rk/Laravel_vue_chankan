@@ -16,6 +16,7 @@ class LayoutController
         $user            = null;
         $charges         = null;
         $charge          = null;
+        $isWorker        = false;
         $isCharge        = false;
         $isViewer        = false;
         $urlPrefix       = AuthService::getUrlPrefix();
@@ -32,6 +33,7 @@ class LayoutController
             } elseif (\Auth::guard('charge')->check()) {
                 $charge   = \Auth::guard('charge')->user();
                 $user     = $charge->user;
+                $isWorker = true;
                 $isCharge = true;
                 if ($charge->edit_type == config('const.charge.edit_type.view')) {
                     $isViewer = true;
@@ -54,6 +56,7 @@ class LayoutController
             'loginUser'       => $user,
             'loginCharge'     => $charge,
             'charges'         => $charges,
+            'isWorker'        => $isWorker,
             'isCharge'        => $isCharge,
             'isViewer'        => $isViewer,
             'urlPrefix'       => $urlPrefix,

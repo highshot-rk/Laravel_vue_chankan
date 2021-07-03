@@ -38,7 +38,9 @@ class SurveysController extends ApiBaseController
             $url = null;
             foreach ($request['images']['file'] as $index => $image) {
                 // ファイルをアップロード
-                $url                      = $image->store('/img/surveys');
+                // $url                      = $image->store('surveys');
+                $url                      = $image->store('public/img/surveys');
+                // $url                      = $image->store('img/surveys');
                 $surveyImage              = new SurveyImage;
                 $surveyImage->img         = $url;
                 $surveyImage->description = $request['descriptions'][$index] !== "null" ? $request['descriptions'][$index] : null;
@@ -75,6 +77,13 @@ $project->projectOrderer->company.' 様
     public function update(SurveyRequest $request, $id)
     {
         \DB::transaction(function () use ($request, $id) {
+            // 現場調査時間を更新
+            $project = Project::find($request->project_id);
+            $params = [
+                'surveyed_at' => Carbon::now(),
+            ];
+            $project->update($params);
+
             // 現地調査を登録
             $survey                             = Survey::find($id);
             $survey->is_send_to_project_orderer = $request['is_send_to_project_orderer'] == "true" ? true : false;
@@ -92,7 +101,7 @@ $project->projectOrderer->company.' 様
                 if ($image_id === "null") {
                     if ($images['is_uploaded'][$index] === "true") {
                         $file                     = array_shift($files);
-                        $url                      = $file->store('/img/surveys');
+                        $url                      = $file->store('public/img/surveys');
                         $surveyImage              = new SurveyImage;
                         $surveyImage->img         = $url;
                         $surveyImage->description = $descriptions[$index] !== "null" ? $descriptions[$index] : null;

@@ -26,7 +26,7 @@ class CreateUsersTable extends Migration
             $table->tinyInteger('prefecture_id')->unsigned()->nullable();
             $table->integer('manager_id')->unsigned();
             $table->integer('limit_login')->unsigned();
-            $table->integer('contract_price')->default(0)->unsigned();
+            // $table->integer('contract_price')->default(0)->unsigned();
             $table->boolean('is_active')->default(1);
             $table->timestamp('last_logined_at')->nullable();
             $table->timestamps();

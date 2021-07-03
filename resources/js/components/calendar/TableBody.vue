@@ -43,16 +43,16 @@
                                                     <!-- <span class="time">10:00-16:00</span> -->
                                                     <span class="beforeContact"><a @click.prevent.stop="showAdvanceNotice(id, lineNumber, target, 'amcolumns')">前日連絡</a></span>
                                                 </li>
-                                                <li>{{ amcolumn.works[target].projectName }}</li>
-                                                <li>{{ amcolumn.works[target].projectWorker }}</li>
-                                                <li>{{ amcolumn.works[target].userName }}</li>
-                                                <li>{{ amcolumn.works[target].userCompany }}</li>
-                                                <li>{{ amcolumn.works[target].projectAddress.slice(0, 10) }}</li>
+                                                <li class="project_name">{{ amcolumn.works[target].projectName }}</li>
+                                                <!-- <li>{{ amcolumn.works[target].chargeName }}</li> -->
+                                                <!-- <li>{{ amcolumn.works[target].userName }}</li> -->
+                                                <!-- <li>{{ amcolumn.works[target].userCompany }}</li> -->
+                                                <!-- <li>{{ amcolumn.works[target].projectAddress }}</li> -->
                                                 <li>{{ amcolumn.works[target].projectRemark }}</li>
                                             </ul>
                                         </div>
                                     </div>
-                                    <div class="field__work__content" v-else-if="amcolumn.memos[target]" @click="openMemoModal(id, lineNumber, target, 'amcolumns')">
+                                    <div class="field__work__content" v-if="amcolumn.memos[target]" @click="openMemoModal(id, lineNumber, target, 'amcolumns')">
                                         <div class="memoContent">
                                             <div class="memoContent__inner">
                                                 <p>{{ amcolumn.memos[target].content }}</p>
@@ -62,7 +62,7 @@
                                 </draggable>
                                 <div v-if="!amcolumn.works[target] && !amcolumn.memos[target]" class="work-field__work__button">
                                     <div class="work-field__work__button__inner flex__wrap f__center v__center">
-                                        <a class="work-add add-button" @click.prevent.stop="openWorkModal(id, lineNumber, target, 'amcolumns')">架設追加</a>
+                                        <a class="work-add add-button" @click.prevent.stop="openWorkModal(id, lineNumber, target, 'amcolumns')">案件追加</a>
                                         <a class="memo-add add-button" @click.prevent.stop="openMemoModal(id, lineNumber, target, 'amcolumns')">メモ追加</a>
                                     </div>
                                 </div>
@@ -83,7 +83,6 @@
                                 </div>
                             </div>
                         </div>
-
                         <div class="process-table-td" v-for="(manager, target) in managers" :key="manager.target">
                             <div class="work-field__work flex__wrap f__center v__center">
                                 <draggable
@@ -108,16 +107,16 @@
                                                     <span class="beforeContact"><a href="" @click.prevent.stop="showAdvanceNotice(id, lineNumber, target, 'pmcolumns')">前日連絡</a></span>
                                                 </li>
                                                 <!-- <li><a @click.prevent.stop="showWorkDetail(id, lineNumber, target, 'pmcolumns')">{{ pmcolumn.works[target].projectName }}</a></li> -->
-                                                <li>{{ pmcolumn.works[target].projectName }}</li>
-                                                <li>{{ pmcolumn.works[target].projectWorker }}</li>
-                                                <li>{{ pmcolumn.works[target].userName }}</li>
-                                                <li>{{ pmcolumn.works[target].userCompany }}</li>
-                                                <li>{{ pmcolumn.works[target].projectAddress.slice(0, 10) }}</li>
+                                                <li class="project_name">{{ pmcolumn.works[target].projectName }}</li>
+                                                <!-- <li>{{ pmcolumn.works[target].chargeName }}</li> -->
+                                                <!-- <li>{{ pmcolumn.works[target].userName }}</li> -->
+                                                <!-- <li>{{ pmcolumn.works[target].userCompany }}</li> -->
+                                                <!-- <li>{{ pmcolumn.works[target].projectAddress }}</li> -->
                                                 <li>{{ pmcolumn.works[target].projectRemark }}</li>
                                             </ul>
                                         </div>
                                     </div>
-                                    <div class="field__work__content" v-else-if="pmcolumn.memos[target]" @click="openMemoModal(id, lineNumber, target, 'pmcolumns')">
+                                    <div class="field__work__content" v-if="pmcolumn.memos[target]" @click="openMemoModal(id, lineNumber, target, 'pmcolumns')">
                                         <div class="memoContent">
                                             <div class="memoContent__inner">
                                                 <p>{{ pmcolumn.memos[target].content }}</p>
@@ -127,7 +126,7 @@
                                 </draggable>
                                 <div v-if="!pmcolumn.works[target] && !pmcolumn.memos[target]" class="work-field__work__button">
                                     <div class="work-field__work__button__inner flex__wrap f__center v__center">
-                                        <a class="work-add add-button" @click.prevent.stop="openWorkModal(id, lineNumber, target, 'pmcolumns')">架設追加</a>
+                                        <a class="work-add add-button" @click.prevent.stop="openWorkModal(id, lineNumber, target, 'pmcolumns')">案件追加</a>
                                         <a class="memo-add add-button" @click.prevent.stop="openMemoModal(id, lineNumber, target, 'pmcolumns')">メモ追加</a>
                                     </div>
                                 </div>
@@ -170,16 +169,16 @@
                                                     <span v-else-if="yetcolumn.works[target].projectType === 2" class="work dismantling">解体</span>
                                                     <span class="beforeContact"><a href="" @click.prevent.stop="showAdvanceNotice(id, lineNumber, target, 'yetcolumns')">前日連絡</a></span>
                                                 </li>
-                                                <li>{{ yetcolumn.works[target].projectName }}</li>
-                                                <li>{{ yetcolumn.works[target].projectWorker }}</li>
-                                                <li>{{ yetcolumn.works[target].userName.slice(0, 10) }}</li>
-                                                <li>{{ yetcolumn.works[target].userCompany.slice(0, 10) }}</li>
-                                                <li>{{ yetcolumn.works[target].projectAddress.slice(0, 10) }}</li>
+                                                <li class="project_name">{{ yetcolumn.works[target].projectName }}</li>
+                                                <!-- <li>{{ yetcolumn.works[target].chargeName }}</li> -->
+                                                <!-- <li>{{ yetcolumn.works[target].userName }}</li> -->
+                                                <!-- <li>{{ yetcolumn.works[target].userCompany }}</li> -->
+                                                <!-- <li>{{ yetcolumn.works[target].projectAddress }}</li> -->
                                                 <li>{{ yetcolumn.works[target].projectRemark }}</li>
                                             </ul>
                                         </div>
                                     </div>
-                                    <div class="field__work__content" v-else-if="yetcolumn.memos[target]" @click="openMemoModal(id, lineNumber, target, 'yetcolumns')">
+                                    <div class="field__work__content" v-if="yetcolumn.memos[target]" @click="openMemoModal(id, lineNumber, target, 'yetcolumns')">
                                         <div class="memoContent">
                                             <div class="memoContent__inner">
                                                 <p>{{ yetcolumn.memos[target].content }}</p>
@@ -189,7 +188,7 @@
                                 </draggable>
                                 <div v-if="!yetcolumn.works[target] && !yetcolumn.memos[target]" class="work-field__work__button">
                                     <div class="work-field__work__button__inner flex__wrap f__center v__center">
-                                        <a class="work-add add-button" @click.prevent.stop="openWorkModal(id, lineNumber, target, 'yetcolumns')">架設追加</a>
+                                        <a class="work-add add-button" @click.prevent.stop="openWorkModal(id, lineNumber, target, 'yetcolumns')">案件追加</a>
                                         <a class="memo-add add-button" @click.prevent.stop="openMemoModal(id, lineNumber, target, 'yetcolumns')">メモ追加</a>
                                     </div>
                                 </div>
@@ -209,6 +208,11 @@
 	dayjs.locale('ja');
 
 	export default {
+        props: {
+            isCharge: {
+                type: String
+            },
+        },
 		components: {
 			draggable
         },
@@ -217,10 +221,8 @@
                 isDrag: true,
             }
         },
-		filters: {
-        },
-        watch: {
-        },
+		filters: {},
+        watch: {},
         computed: {
             refreshVal: function() {
                 return this.$store.getters.getRefreshVal;
@@ -232,7 +234,9 @@
                 return this.$store.getters.getManagerLists;
             },
         },
-		created: function() {},
+		created: function() {
+            console.log(this.$store.state)
+        },
 		mounted: function() {
             // 基準日が変更したタイミングで、カレンダwーの日付を全て変更
 			this.$store.watch(
@@ -250,47 +254,43 @@
 
             // 案件の色IDに対応する、着色用のCSSのclass名を返却する
             getColorClassName: function(id, lineNumber, target, timeStatus) {
-                let result = 'one';
-                if (this.calendars.length > 0) {
-                // 案件が存在する場合のみ、色IDに基づいたclass名を決定
-                    if (this.calendars[id][timeStatus][lineNumber]) {
-                        if (this.calendars[id][timeStatus][lineNumber].works[target]) {
-                            switch (Number(this.calendars[id][timeStatus][lineNumber].works[target].projectColor)) {
-                                case 1:
-                                    result = 'one';
-                                    break;
-                                case 2:
-                                    result = 'two';
-                                    break;
-                                case 3:
-                                    result = 'three';
-                                    break;
-                                case 4:
-                                    result = 'four';
-                                    break;
-                                case 5:
-                                    result = 'five';
-                                    break;
-                                case 6:
-                                    result = 'six';
-                                    break;
-                                case 7:
-                                    result = 'seven';
-                                    break;
-                                case 8:
-                                    result = 'eight';
-                                    break;
-                                case 9:
-                                    result = 'nine';
-                                    break;
-                                case 10:
-                                    result = 'ten';
-                                    break;
-                            }
-                        }
+                let resultColor = '';
+                let targetArea = this.calendars[id][timeStatus][lineNumber].works[target];
+                if(targetArea) {
+                    switch (Number(this.calendars[id][timeStatus][lineNumber].works[target].projectColor)) {
+                        case 1:
+                            resultColor = 'one';
+                            break;
+                        case 2:
+                            resultColor = 'two';
+                            break;
+                        case 3:
+                            resultColor = 'three';
+                            break;
+                        case 4:
+                            resultColor = 'four';
+                            break;
+                        case 5:
+                            resultColor = 'five';
+                            break;
+                        case 6:
+                            resultColor = 'six';
+                            break;
+                        case 7:
+                            resultColor = 'seven';
+                            break;
+                        case 8:
+                            resultColor = 'eight';
+                            break;
+                        case 9:
+                            resultColor = 'nine';
+                            break;
+                        case 10:
+                            resultColor = 'ten';
+                            break;
                     }
                 }
-                return result;
+                return resultColor;
             },
 
             // 工程表：移動操作
@@ -403,7 +403,7 @@
 			// 工程のモーダルをオープンする
 			openWorkModal: function(calendarId, lineId, memberId, columnStatus) {
 				this.$store.dispatch('sendid', {calendarId, lineId, memberId, columnStatus});
-				this.$store.commit('showWork');
+				this.$store.commit('showWork', columnStatus);
 				this.$store.commit('toggleWorkModal');
             },
             // 工程の変更モーダルをオープンする
@@ -412,15 +412,24 @@
 				this.$store.commit('showWork');
                 this.$store.commit('toggleWorkModal');
             },
-
             // その他ページへ遷移する
             // 案件詳細ページへ遷移する
             showWorkDetail: function(id, lineNumber, target, timeStatus) {
-                window.open('/projects/detail/' + this.calendars[id][timeStatus][lineNumber].works[target].projectId, '_blank');
+                if(this.isCharge == 1) {
+                    // window.open('/charge/projects/detail/' + this.calendars[id][timeStatus][lineNumber].works[target].projectId, '_blank');
+                    window.location.href = '/charge/projects/detail/' + this.calendars[id][timeStatus][lineNumber].works[target].projectId;
+                }
+                // window.open('/projects/detail/' + this.calendars[id][timeStatus][lineNumber].works[target].projectId, '_blank');
+                window.location.href = '/projects/detail/' + this.calendars[id][timeStatus][lineNumber].works[target].projectId;
             },
             // 前日連絡ページへ遷移する
             showAdvanceNotice: function(id, lineNumber, target, timeStatus) {
-                window.open('/projects/advance-notice/' + this.calendars[id][timeStatus][lineNumber].works[target].projectId, '_blank');
+                if(this.isCharge == 1) {
+                    // window.open('/charge/projects/advance-notice/' + this.calendars[id][timeStatus][lineNumber].works[target].projectId, '_blank');
+                    window.location.href = '/charge/projects/advance-notice/' + this.calendars[id][timeStatus][lineNumber].works[target].projectId;
+                }
+                // window.open('/projects/advance-notice/' + this.calendars[id][timeStatus][lineNumber].works[target].projectId, '_blank');
+                window.location.href = '/projects/advance-notice/' + this.calendars[id][timeStatus][lineNumber].works[target].projectId;
             },
         },
 	}

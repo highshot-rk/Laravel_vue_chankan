@@ -33,7 +33,7 @@
                                         </label>
                                     </div>
                                 </div>
-                                <div class="content__input">
+                                <!-- <div class="content__input">
                                     <template v-for="(option, index) in charges">
                                         <div class="content__input__box">
                                             <div class="content__input__box__inner">
@@ -93,7 +93,7 @@
                                     <div class="content__add flex__wrap f__center">
                                         <button @click="addCharge">担当者追加<span class="f__center"><img src="/assets/img/icon_add_white_bold.png" alt=""></span></button>
                                     </div>
-                                </div>
+                                </div> -->
                             </div>
                         </div>
                     </div>
@@ -153,7 +153,7 @@
             registerUser: function() {
                 const params = {
                     user:       this.user,
-                    charges:    this.charges,
+                    // charges:    this.charges,
                     enable_sms: this.enable_sms,
                 }
                 axios.post('/api/users', params)

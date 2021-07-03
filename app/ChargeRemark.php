@@ -27,7 +27,12 @@ class ChargeRemark extends Model
         $work_on_from = isset($params['work_on_from']) ? $params['work_on_from'] : '';
         $work_on_to   = isset($params['work_on_to']) ? $params['work_on_to'] : '';
 
-        return self::ofUserId($user_id)
+        return self::select([
+                'charge_remarks.*',
+                'charges.name as charge_name',
+            ])
+            ->leftJoin('charges', 'charge_remarks.charge_id', '=', 'charges.id')
+            ->ofUserId($user_id)
             ->ofTimeType($time_type)
             ->ofWorkOnFrom($work_on_from)
             ->ofWorkOnTo($work_on_to);

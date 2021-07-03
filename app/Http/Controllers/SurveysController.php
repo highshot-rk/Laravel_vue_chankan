@@ -53,8 +53,10 @@ class SurveysController extends Controller
     public function show($id)
     {
         $survey     = Survey::find($id);
+        $project    = Project::where('label', $survey['project_label'])->first();
+        $project_id = $project['id'];
         $survey_id  = $id;
         $enable_sms = $survey->projectLabel->project->user->enable_sms;
-        return view('survey.show', compact('survey_id', 'survey', 'enable_sms'));
+        return view('survey.show', compact('survey_id', 'survey', 'enable_sms', 'project_id'));
     }
 }

@@ -36,5 +36,5 @@ function is_mobile () {
 
     <!-- vue.js IE対応 -->
     <script src="https://www.promisejs.org/polyfills/promise-6.1.0.min.js"></script>
-    <link rel="stylesheet" type="text/css" href="{{ asset('assets/css/process.css') }}">
+    <link rel="stylesheet" type="text/css" href="{{ asset('assets/css/process.css') }}?<?php echo date('Ymd-Hi'); ?>">
 </head>

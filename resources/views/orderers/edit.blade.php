@@ -1,13 +1,13 @@
 @include("../components/head")
 <body>
     <div id="app">
-    	<!-- スマホのみのメニューバー -->
-    	@include("../components/nav")
-    	<div class="wrap flex__wrap f__start input__area">
-    		@include("../components/sidebar")
-    		<div class="wrap__right">
-    			@include("../components/header")
-    			<div class="allWrapper">
+        <!-- スマホのみのメニューバー -->
+        @include("../components/nav")
+        <div class="wrap flex__wrap f__start input__area">
+            @include("../components/sidebar")
+            <div class="wrap__right">
+                @include("../components/header")
+                <div class="allWrapper">
                     <form @if ($isCharge) action="{{ route('charge.orderers.update', $projectOrderer->id) }}" @else action="{{ route('orderers.update', $projectOrderer->id) }}" @endif method="POST">
                         @csrf
                         <div class="content__wrap">
@@ -26,13 +26,6 @@
                                     </script>
                                     @endif
                                 @endif
-
-                                <div class="content__header">
-                                    <div class="content__title">
-                                        <h1 class="h1">元請け情報編集</h1>
-                                        <span class="en">Prime Contractor Edit</span>
-                                    </div>
-                                </div>
 
                                 {{-- バリデーションエラー時の表示 --}}
                                 @if ($errors->any())
@@ -53,6 +46,13 @@
                                 </div>
                                 @endif
                                 -->
+
+                                <div class="content__header">
+                                    <div class="content__title">
+                                        <h1 class="h1">元請け情報編集</h1>
+                                        <span class="en">Prime Contractor Edit</span>
+                                    </div>
+                                </div>
 
                                 <div class="content__floar">
                                     <div class="content__floar__inner">
@@ -161,8 +161,8 @@
                             </div>
                         </div>
                     </form>
-    			</div>
-    		</div>
+                </div>
+            </div>
         </div>
 	</div>
 	@include("../components/footer")

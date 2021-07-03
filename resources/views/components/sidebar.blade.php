@@ -31,12 +31,21 @@ $lineMessate = str_replace("#", "%0D%0A", $body);
             @endif
             <li><a @if ($isCharge) href="{{ route('charge.calendar') }}" @else href="{{ route('calendar') }}" @endif>
                 <img src="{{ asset('assets/img/icon_calender_black.png') }}">カレンダー</a></li>
-            <li><a @if ($isCharge) href="{{ route('charge.process') }}" @else href="{{ route('process') }}" @endif>
-                <img src="{{ asset('assets/img/icon_calender_black.png') }}">工程表</a></li>
+            @if (!$isViewer)
+            <li><a @if ($isCharge) href="{{ route('charge.process', $isCharge) }}" @else href="{{ route('process') }}" @endif>
+                <img src="{{ asset('assets/img/icon_koutei_black.png') }}">工程表</a></li>
+            @endif
+            <li><a @if ($isCharge) href="{{ route('charge.charge-remarks.index') }}" @else href="{{ route('charge-remarks.index') }}" @endif>
+                <img src="{{ asset('assets/img/icon_memo_black.png') }}">メモ一覧</a></li>
             @if (!$isViewer)
             <li><a @if ($isCharge) href="{{ route('charge.orderers.index') }}" @else href="{{ route('orderers.index') }}" @endif>
-                <img src="{{ asset('assets/img/icon_human_black.png') }}">元請け一覧</a></li>
+                <img src="{{ asset('assets/img/icon_charge_black.png') }}">元請け一覧</a></li>
             @endif
+            @if (!$isCharge)
+            <li><a href="{{ route('charges.index') }}">
+                <img src="{{ asset('assets/img/icon_human_black.png') }}">スタッフ一覧</a></li>
+            @endif
+
             <li><a @if ($isCharge) href="{{ route('charge.user.show') }}" @else href="{{ route('user.show') }}" @endif>
                 <img src="{{ asset('assets/img/icon_profile_black.png') }}">プロフィール編集</a></li>
             <li><a @if ($isCharge) href="{{ route('charge.term.service') }}" @else href="{{ route('term.service') }}" @endif>
@@ -64,7 +73,8 @@ $lineMessate = str_replace("#", "%0D%0A", $body);
 			</li>
             <li class="logoutButton">
                 @auth('web')
-            	<a class="textCenter" href="/login"
+                <a class="textCenter"
+                    href="/login"
                     onclick="event.preventDefault();
                             document.getElementById('logout-form1').submit();">
                     ログアウト
@@ -74,7 +84,8 @@ $lineMessate = str_replace("#", "%0D%0A", $body);
                 </form>
                 @endauth
                 @auth('charge')
-            	<a class="textCenter" href="/login"
+                <a class="textCenter"
+                    href="/login"
                     onclick="event.preventDefault();
                             document.getElementById('logout-form2').submit();">
                     ログアウト
@@ -84,6 +95,6 @@ $lineMessate = str_replace("#", "%0D%0A", $body);
                 </form>
                 @endauth
             </li>
-    	</ul>
-  	</div>
+        </ul>
+    </div>
 </div>

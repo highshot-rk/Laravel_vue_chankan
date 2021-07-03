@@ -53,6 +53,19 @@ class SmsController extends ApiBaseController
     }
 
     /**
+     * ショートメッセージ送信：(担当者)ログイン
+     *
+     * @param Request $request
+     * @return json
+     */
+    public function sendChargeLogin(SmsRequest $request)
+    {
+        $type = config('const.sms.type.charge_login');
+        SmsService::sendToCharge($request->project_id, $type, $request->message);
+        return response()->noContent();
+    }
+
+    /**
      * ショートメッセージ送信：(クライアント)作業開始
      *
      * @param Request $request

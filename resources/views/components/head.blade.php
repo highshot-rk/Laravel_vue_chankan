@@ -17,11 +17,11 @@ function is_mobile () {
 	<meta name="format-detection" content="telephone=no">
 	{{-- <title>@yield('title')</title> --}}
 	<title>CATTOBI</title>
-    <link rel="stylesheet" type="text/css" href="{{ asset('assets/css/style.css') }}">
+    <link rel="stylesheet" type="text/css" href="{{ asset('assets/css/style.css') }}?<?php echo date('Ymd-Hi'); ?>">
     {{-- <?php if (is_mobile()) { ?>
-		<link rel="stylesheet" type="text/css" href="{{ asset('assets/css/mobile.css') }}">
+		<link rel="stylesheet" type="text/css" href="{{ asset('assets/css/mobile.css') }}?<?php echo date('Ymd-Hi'); ?>">
 	<?php } else { ?>
-		<link rel="stylesheet" type="text/css" href="{{ asset('assets/css/pc.css') }}">
+		<link rel="stylesheet" type="text/css" href="{{ asset('assets/css/pc.css') }}?<?php echo date('Ymd-Hi'); ?>">
 	<?php } ?> --}}
 
 	<!-- favicon -->

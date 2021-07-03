@@ -8,14 +8,15 @@
                             <div class="supplement">
                                 <span class="sub">{{ project.time_type_name }}・{{ project.project_type_name }}</span>
                                 /
-                                <span class="charge">{{ project.charge.name }}</span>
+                                <span class="charge" v-if="project.charge">{{ project.charge.name }}</span>
+                                <span class="charge" v-else>未定</span>
                             </div>
                             <div style="display:table; width:100%;">
                                 <div class="title" style="display:table-cell;">
                                     <span>{{ project.name }}</span>
                                 </div>
                                 <div class="spent_date" style="display:table-cell; text-align:right;">
-                                    <span>経過日数 {{ diffInDays(project.created_at) }}日</span>
+                                    <span class="colorRed bold">経過日数 {{ diffInDays(project.created_at) }}日</span>
                                 </div>
                             </div>
                             <ul class="flex__wrap f__start status">

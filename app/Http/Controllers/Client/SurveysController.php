@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Client;
 
 use App\Survey;
+use App\Project;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 

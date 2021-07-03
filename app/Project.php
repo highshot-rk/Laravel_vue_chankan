@@ -13,7 +13,6 @@ use Illuminate\Database\Eloquent\SoftDeletes;
 class Project extends Model
 {
     use SoftDeletes;
-
     protected $guarded = ['created_at', 'updated_at'];
     protected $dates   = ['last_messaged_at', 'notified_at', 'surveyed_at', 'started_at', 'finished_at', 'work_on'];
 
@@ -29,26 +28,28 @@ class Project extends Model
         $year         = isset($params['year']) ? $params['year'] : '';
         $month        = isset($params['month']) ? $params['month'] : '';
         $charge_id    = isset($params['charge_id']) ? $params['charge_id'] : '';
+        $worker_id    = isset($params['worker_id']) ? $params['worker_id'] : '';
         $project_type = isset($params['project_type']) ? $params['project_type'] : [];
         // $time_type    = isset($params['time_type']) ? $params['time_type'] : '';
         $time_type    = isset($params['time_type']) ? $params['time_type'] : [];
         $work_on      = isset($params['work_on']) ? $params['work_on'] : '';
         return self::join('project_orderers', 'project_orderers.id', '=', 'projects.project_orderer_id')
-                ->ofWorkOnByYearMonth($year, $month)
-                ->ofFreeKeyword($keyword)
-                ->ofChargeId($charge_id)
-                ->ofProjectType($project_type)
-                ->ofTimeType($time_type)
-                ->ofWorkOn($work_on)
-                ->ofUserId($user_id)
-                ->orderBy('projects.created_at', 'ASC')
-                ->orderByRaw("CASE
-                    WHEN projects.project_type = 1 THEN 1
-                    WHEN projects.project_type = 0 THEN 2
-                    WHEN projects.project_type = 2 THEN 3
-                    END")
-                ->orderBy('project_orderers.company_kana')
-                ->select('projects.*');
+            ->ofWorkOnByYearMonth($year, $month)
+            ->ofFreeKeyword($keyword)
+            ->ofChargeId($charge_id)
+            ->ofWorkerId($worker_id)
+            ->ofProjectType($project_type)
+            ->ofTimeType($time_type)
+            ->ofWorkOn($work_on)
+            ->ofUserId($user_id)
+            ->orderBy('projects.created_at', 'ASC')
+            ->orderByRaw("CASE
+                WHEN projects.project_type = 1 THEN 1
+                WHEN projects.project_type = 0 THEN 2
+                WHEN projects.project_type = 2 THEN 3
+                END")
+            ->orderBy('project_orderers.company_kana')
+            ->select('projects.*');
     }
 
     /**
@@ -117,6 +118,19 @@ class Project extends Model
     {
         if (blank($key)) return;
         return $query->where('projects.charge_id', $key);
+    }
+
+    /**
+     * Scopeによる絞り込み：作業者ID
+     *
+     * @param Builder $query
+     * @param [integer] $key
+     * @return Builder
+     */
+    public function scopeOfWorkerId(Builder $query, $key)
+    {
+        if (blank($key)) return;
+        return $query->where('projects.worker_id', $key);
     }
 
     /**
@@ -208,6 +222,16 @@ class Project extends Model
     public function charge()
     {
         return $this->belongsTo('App\Charge');
+    }
+
+    /**
+     * リレーション：作業者
+     *
+     * @return void
+     */
+    public function worker()
+    {
+        return $this->belongsTo('App\Charge', 'worker_id');
     }
 
     /**

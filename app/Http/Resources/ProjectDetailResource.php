@@ -21,6 +21,8 @@ class ProjectDetailResource extends JsonResource
             'project_orderer'             => $this->projectOrderer,
             'name'                        => $this->name,
             'charge'                      => $this->charge,
+            'staff'                       => $this->worker,
+            'worker'                      => $this->worker_id,
             'survey'                      => $this->projectLabel->survey,
             'work_on_string'              => $this->workOn(),
             'work_on_date'                => $this->work_on ? $this->work_on->format('Y-m-d') : '--',
@@ -51,7 +53,6 @@ class ProjectDetailResource extends JsonResource
             'url'                         => $this->url,
             'is_send_to_user'             => $this->is_send_to_user,
             'is_send_to_charge'           => $this->is_send_to_charge,
-            'worker'                      => $this->worker,
             'process_color_id'            => $this->process_color_id,
         ];
     }

@@ -1,76 +1,82 @@
 <template>
     <div class="content__section">
         <swiper :options="swiperOption" ref="mySwiper">
-          <swiper-slide v-for="(workOnItem, index) in workOnArray" :key="index">
-            <div class="content__header">
-                <div class="content__title">
-                    <h1 class="h1">{{ dispWorkOnString(workOnItem) }}の案件</h1>
-                    <span class="en">Day of Construction</span>
+            <swiper-slide v-for="(workOnItem, index) in workOnArray" :key="index">
+                <div class="content__header">
+                    <div class="content__title">
+                        <h1 class="h1">{{ dispWorkOnString(workOnItem) }}の案件</h1>
+                        <span class="en">Day of Construction</span>
+                    </div>
+                    <div class="content__edit">
+                        <ul class="flex__wrap f__end">
+                            <li><a :href="`${urlPrefix}/memos/?work_on=` + workOnItem">メモ一覧</a></li>
+                        </ul>
+                    </div>
                 </div>
-            </div>
-            <div class="content__tab">
-                <div class="content__tab__box flex__wrap four__tab">
-                    <div class="content__tab__content" :class="{selected: timeType == 3}" @click="changeTimeType(3)"><span>一覧</span></div>
-                    <div class="content__tab__content" :class="{selected: timeType == 1}" @click="changeTimeType(1)"><span>AM</span></div>
-                    <div class="content__tab__content" :class="{selected: timeType == 2}" @click="changeTimeType(2)"><span>PM</span></div>
-                    <div class="content__tab__content" :class="{selected: timeType == 0}" @click="changeTimeType(0)"><span>未定</span></div>
+                <div class="content__tab">
+                    <div class="content__tab__box flex__wrap four__tab">
+                        <div class="content__tab__content" :class="{selected: timeType == 3}" @click="changeTimeType(3)"><span>一覧</span></div>
+                        <div class="content__tab__content" :class="{selected: timeType == 1}" @click="changeTimeType(1)"><span>AM</span></div>
+                        <div class="content__tab__content" :class="{selected: timeType == 2}" @click="changeTimeType(2)"><span>PM</span></div>
+                        <div class="content__tab__content" :class="{selected: timeType == 0}" @click="changeTimeType(0)"><span>未定</span></div>
+                    </div>
+                    <div class="content__tab__box flex__wrap">
+                        <div class="content__tab__content" :class="{selected: projectType == 3}" @click="changeProjectType(3)"><span>一覧</span></div>
+                        <div class="content__tab__content" :class="{selected: projectType == 0}" @click="changeProjectType(0)"><span>架設</span></div>
+                        <div class="content__tab__content" :class="{selected: projectType == 2}" @click="changeProjectType(2)"><span>解体</span></div>
+                    </div>
                 </div>
-                <div class="content__tab__box flex__wrap">
-                    <div class="content__tab__content" :class="{selected: projectType == 3}" @click="changeProjectType(3)"><span>一覧</span></div>
-                    <div class="content__tab__content" :class="{selected: projectType == 0}" @click="changeProjectType(0)"><span>架設</span></div>
-                    <div class="content__tab__content" :class="{selected: projectType == 2}" @click="changeProjectType(2)"><span>解体</span></div>
-                </div>
-            </div>
-            <div class="content__floar">
-                <div class="content__floar__inner">
-                    <template v-for="(project, index_in) in workOnProjects(index)">
-                        <div class="content__box common__list">
-                            <div class="content__box__inner">
-                                <div class="common__list__head">
-                                    <a :href="`${urlPrefix}/projects/detail/${project.id}`">
-                                        <div class="supplement">
-                                            <span class="sub">{{ project.time_type_name }}・
-                                                <template v-if="project.project_type_name == '解体'">
-                                                    <span class="colorRed">{{ project.project_type_name }}</span>
-                                                </template>
-                                                <template v-else="project.project_type_name">
-                                                    <span class="colorBlue">
-                                                    {{ project.project_type_name }}
-                                                    </span>
-                                                </template>
-                                            </span> / <span class="charge">{{ project.charge.name }}</span>
-                                        </div>
-                                        <div class="title">
-                                            <span>{{ project.name }}</span>
-                                        </div>
-                                        <ul class="flex__wrap f__start status">
-                                            <li :class="{ done: project.is_surveyed }"><span>現調</span></li>
-                                            <li :class="{ done: project.is_notified }"><span>前日</span></li>
-                                            <li :class="{ done: project.is_started }"><span>開始</span></li>
-                                            <li :class="{ done: project.is_finished }"><span>終了</span></li>
-                                            <li><a :href="`https://www.google.com/maps/search/?api=1&query=${project.address}`" target="_blank" rel="noopener">MAP</a></li>
+                <div class="content__floar">
+                    <div class="content__floar__inner">
+                        <template v-for="(project, index_in) in workOnProjects(index)">
+                            <div class="content__box common__list">
+                                <div class="content__box__inner">
+                                    <div class="common__list__head">
+                                        <a :href="`${urlPrefix}/projects/detail/${project.id}`">
+                                            <div class="supplement">
+                                                <span class="sub">{{ project.time_type_name }}・
+                                                    <template v-if="project.project_type_name == '解体'">
+                                                        <span class="colorRed">{{ project.project_type_name }}</span>
+                                                    </template>
+                                                    <template v-else-if="project.project_type_name">
+                                                        <span class="colorBlue">
+                                                        {{ project.project_type_name }}
+                                                        </span>
+                                                    </template>
+                                                </span> / <span class="charge" v-if="project.charge">{{ project.charge.name }}</span>
+                                            <span class="charge" v-else>未定</span>
+                                            </div>
+                                            <div class="title">
+                                                <span>{{ project.name }}</span>
+                                            </div>
+                                            <ul class="flex__wrap f__start status">
+                                                <li :class="{ done: project.is_surveyed }"><span>現調</span></li>
+                                                <li :class="{ done: project.is_notified }"><span>前日</span></li>
+                                                <li :class="{ done: project.is_started }"><span>開始</span></li>
+                                                <li :class="{ done: project.is_finished }"><span>終了</span></li>
+                                                <li><a :href="`https://www.google.com/maps/search/?api=1&query=${project.address}`" target="_blank" rel="noopener">MAP</a></li>
+                                            </ul>
+                                        </a>
+                                    </div>
+                                    <div class="common__list__body">
+                                        <ul class="others">
+                                            <li class="address bgCenterCover">{{ project.address }}</li>
+                                            <li class="company bgCenterCover">{{ project.project_orderer.company }}</li>
+                                            <template v-if="project.project_orderer.phone">
+                                                <li class="phone bgCenterCover">{{ project.project_orderer.phone }}</li>
+                                            </template>
+                                            <template v-if="!project.project_orderer.phone">
+                                                <li class="phone bgCenterCover red">電話番号が未登録</li>
+                                            </template>
+                                            <li class="input__box"><textarea v-model="project.remark" class="bgType remark" ref="remark" @change="modifyRemark(project.id, index_in)"></textarea></li>
                                         </ul>
-                                    </a>
-                                </div>
-                                <div class="common__list__body">
-                                    <ul class="others">
-                                        <li class="address bgCenterCover">{{ project.address }}</li>
-                                        <li class="company bgCenterCover">{{ project.project_orderer.company }}</li>
-                                        <template v-if="project.project_orderer.phone">
-                                            <li class="phone bgCenterCover">{{ project.project_orderer.phone }}</li>
-                                        </template>
-                                        <template v-if="!project.project_orderer.phone">
-                                            <li class="phone bgCenterCover red">電話番号が未登録</li>
-                                        </template>
-                                        <li class="input__box"><textarea v-model="project.remark" class="bgType remark" ref="remark" @change="modifyRemark(project.id, index_in)"></textarea></li>
-                                    </ul>
+                                    </div>
                                 </div>
                             </div>
-                        </div>
-                    </template>
+                        </template>
+                    </div>
                 </div>
-            </div>
-          </swiper-slide>
+            </swiper-slide>
         </swiper>
     </div>
 </template>
@@ -164,6 +170,8 @@
                                 this.workOnArray.push(project.work_on_date)
                             }
                         })
+                        // 日付順に並び替える
+                        this.workOnArray.sort()
                         // propsで受け取った施工日をデフォルトの表示位置とする
                         this.workOnArray.forEach((workOn, index) => {
                             if (workOn === this.workOn) {

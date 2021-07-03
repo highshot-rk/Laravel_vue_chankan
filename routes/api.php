@@ -28,8 +28,8 @@ Route::post('projects/advance-notice/{id}', 'Api\ProjectsController@advanceNotic
 // 案件情報_一括削除API
 Route::post('projects/delete-multi', 'Api\ProjectsController@destroyByMultiId');
 // 担当者情報API
-Route::resource('charges', 'Api\ChargesController')->only(['index']);
-// Route::post('charges/sort/{id}', 'Api\ChargesController@updateSort');
+Route::resource('charges', 'Api\ChargesController')->only(['index', 'show', 'destroy']);
+Route::post('charges/sort/{id}', 'Api\ChargesController@updateSort');
 // 広告会社情報API
 Route::resource('advertisements', 'Api\AdvertisementsController')->only(['index', 'show', 'store', 'update', 'destroy']);
 // 契約終了API
@@ -66,6 +66,8 @@ Route::post('sms/advance-notice', 'Api\SmsController@sendAdvanceNotice');
 Route::post('sms/start', 'Api\SmsController@sendStart');
 // (クライアント)作業完了
 Route::post('sms/fin', 'Api\SmsController@sendFin');
+// (担当者)ログイン情報
+Route::post('sms/charge-login', 'Api\SmsController@sendChargeLogin');
 // ユーザー情報API
 Route::resource('users', 'Api\UsersController')->only(['index', 'show', 'store', 'update', 'destroy']);
 

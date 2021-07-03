@@ -242,7 +242,7 @@ input[type="button"]::focus {
 
 
 
-  common
+    common
 
 
 
@@ -425,7 +425,7 @@ input[type="button"]::focus {
 
 
 
-  z-index
+    z-index
 
 
 
@@ -494,11 +494,15 @@ header.isOpen .header__right {
   z-index: 5;
 }
 
+.lum-lightbox {
+  z-index: 10000;
+}
+
 /*-----------------------------------------------------------------------------------------
 
 
 
-  keyframe
+    keyframe
 
 
 
@@ -537,6 +541,7 @@ header.isOpen .header__right {
 .content__success {
   padding: 15px;
   margin-bottom: 20px;
+  font-size: 1.1em;
 }
 @media screen and (min-width: 960px) {
   .content__error,
@@ -549,7 +554,8 @@ header.isOpen .header__right {
   background: #FCECEC;
   border: 1px solid #C14646;
 }
-.content__error p {
+.content__error p,
+.content__error ul li {
   color: #C14646;
 }
 
@@ -565,7 +571,32 @@ header.isOpen .header__right {
 
 
 
-  vue.js
+    luminous
+
+
+
+------------------------------------------------------------------------------------------*/
+.lum-lightbox-inner img {
+  width: auto;
+}
+@media screen and (max-width: 959px) {
+  .lum-lightbox-inner img {
+    max-width: 160vw !important;
+    /* 軽くスワイプで左端から右端まで動かせる量 */
+    max-height: 85vh !important;
+    /* 上下に適度に余白 */
+  }
+}
+
+.lum-gallery-button {
+  display: none !important;
+}
+
+/*-----------------------------------------------------------------------------------------
+
+
+
+    vue.js
 
 
 
@@ -669,6 +700,7 @@ header.isOpen .header__right {
   text-align: center;
 }
 .modal__content__inner p.attention {
+  font-size: 1.1em;
   font-weight: 700;
   margin-bottom: 30px;
 }
@@ -729,8 +761,10 @@ header.isOpen .header__right {
     margin: auto;
   }
 }
-.content__wrap .content__section {
-  margin-top: 34px;
+@media screen and (max-width: 959px) {
+  .content__wrap .content__section {
+    margin-top: 34px;
+  }
 }
 @media screen and (min-width: 960px) {
   .content__wrap .content__section {
@@ -797,7 +831,6 @@ header.isOpen .header__right {
 .content__wrap .content__edit li a {
   display: inline-block;
   width: 100%;
-  padding: 0px 10px;
   height: 35px;
   line-height: 35px;
   border-radius: 3px;
@@ -815,9 +848,9 @@ header.isOpen .header__right {
 @media screen and (min-width: 960px) {
   .content__wrap .content__edit li a {
     font-size: 13px;
-    height: 26px;
-    padding: 0px 15px;
-    line-height: 26px;
+    height: 40px;
+    padding: 0px 40px;
+    line-height: 40px;
   }
 }
 .content__wrap .content__edit ul.secondUl {
@@ -1006,6 +1039,42 @@ header.isOpen .header__right {
   white-space: pre-wrap;
   line-height: 1.4;
 }
+.content__input .input__text .colorBox {
+  width: 40px;
+  height: 40px;
+  border-radius: 3px;
+  display: block;
+}
+.content__input .input__text .colorBox.one {
+  background: #d50000;
+}
+.content__input .input__text .colorBox.two {
+  background: #e67c73;
+}
+.content__input .input__text .colorBox.three {
+  background: #f4511e;
+}
+.content__input .input__text .colorBox.four {
+  background: #f6bf26;
+}
+.content__input .input__text .colorBox.five {
+  background: #33b679;
+}
+.content__input .input__text .colorBox.six {
+  background: #0b8043;
+}
+.content__input .input__text .colorBox.seven {
+  background: #039be5;
+}
+.content__input .input__text .colorBox.eight {
+  background: #3f51b5;
+}
+.content__input .input__text .colorBox.nine {
+  background: #7986cb;
+}
+.content__input .input__text .colorBox.ten {
+  background: #616161;
+}
 .content__input .otherLinkText {
   margin-top: 0.5em;
 }
@@ -1117,6 +1186,11 @@ header.isOpen .header__right {
 .content__submit .submit__box {
   width: 180px;
 }
+@media screen and (max-width: 959px) {
+  .content__submit .submit__box {
+    margin-bottom: 30px;
+  }
+}
 @media screen and (min-width: 960px) {
   .content__submit .submit__box {
     width: 240px;
@@ -1200,6 +1274,96 @@ header.isOpen .header__right {
 }
 .content__add button span img {
   width: 10px;
+}
+
+.selectColor {
+  padding-left: 0 !important;
+}
+@media screen and (max-width: 959px) {
+  .selectColor {
+    width: 100%;
+  }
+}
+.selectColor .colorBox {
+  position: relative;
+  background: #fff;
+  padding-left: 0 !important;
+}
+.selectColor .colorBox:before {
+  content: "";
+  display: none !important;
+}
+@media screen and (max-width: 959px) {
+  .selectColor .colorBox {
+    width: 19%;
+  }
+  .selectColor .colorBox:nth-child(n+6) {
+    margin-top: 5px;
+  }
+}
+.selectColor .colorBox.one label {
+  background: #d50000;
+}
+.selectColor .colorBox.two label {
+  background: #e67c73;
+}
+.selectColor .colorBox.three label {
+  background: #f4511e;
+}
+.selectColor .colorBox.four label {
+  background: #f6bf26;
+}
+.selectColor .colorBox.five label {
+  background: #33b679;
+}
+.selectColor .colorBox.six label {
+  background: #0b8043;
+}
+.selectColor .colorBox.seven label {
+  background: #039be5;
+}
+.selectColor .colorBox.eight label {
+  background: #3f51b5;
+}
+.selectColor .colorBox.nine label {
+  background: #7986cb;
+}
+.selectColor .colorBox.ten label {
+  background: #616161;
+}
+.selectColor .colorBox input[type=radio] {
+  width: 100%;
+  opacity: 0;
+}
+@media screen and (max-width: 959px) {
+  .selectColor .colorBox input[type=radio] {
+    position: relative;
+  }
+}
+@media screen and (min-width: 960px) {
+  .selectColor .colorBox input[type=radio] {
+    width: 40px;
+    height: 40px;
+  }
+}
+.selectColor .colorBox input[type=radio]:checked + label {
+  opacity: 0.3;
+}
+.selectColor .colorBox label {
+  position: absolute;
+  display: block;
+  left: 0;
+  top: 0;
+  width: 100%;
+  height: 100%;
+  cursor: pointer;
+  pointer-events: none;
+  border-radius: 3px;
+}
+@media screen and (min-width: 960px) {
+  .selectColor .colorBox label {
+    height: 40px;
+  }
 }
 
 /*　一覧ページ
@@ -1316,6 +1480,10 @@ ul.status li.done span {
   .flex__wrap.sp__flex__release {
     display: block;
   }
+}
+
+.project_name {
+  overflow: hidden;
 }
 
 .v__center {
@@ -1435,7 +1603,7 @@ nav .plusButton a img {
 
 ------------------------------------------------------------------------------------------*/
 header {
-  padding: 25px 0px 0;
+  padding: 25px 0 0;
 }
 @media screen and (min-width: 560px) {
   header {
@@ -1444,7 +1612,8 @@ header {
 }
 @media screen and (min-width: 960px) {
   header {
-    padding: 15px 0px 44px;
+    padding: 15px 0px 0;
+    margin-bottom: 44px;
   }
   header .allWrapper {
     text-align: right;
@@ -2919,7 +3088,7 @@ header {
 
 
 
-  /manage/user/
+    /manage/user/
 
 
 

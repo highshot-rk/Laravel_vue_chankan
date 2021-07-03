@@ -16,10 +16,10 @@ class CreateChargesTable extends Migration
         Schema::create('charges', function (Blueprint $table) {
             $table->increments('id')->unsigned();
             $table->integer('user_id')->unsigned();
-            $table->string('phone', 16);
+            $table->string('phone', 11);
             $table->foreign('user_id')->references('id')->on('users');
             $table->string('name');
-            $table->integer('contract_price')->default(0)->unsigned();
+            // $table->integer('contract_price')->default(0)->unsigned();
             // $table->integer('sort')->unsigned();
             $table->timestamps();
             $table->softDeletes();

@@ -2,15 +2,14 @@
     <div class="allWrapper">
         <div class="content__wrap">
             <div class="content__section">
-
+                <div class="content__success" v-if="project.is_started === 1">
+                    <p>作業開始報告メッセージが、営業担当及び元請けに送られました。<br>作業終了時は、「作業終了」ボタンを押してください。</p>
+                </div>
                 <div class="content__header">
                     <div class="content__title">
                         <h1 class="h1">{{ project.name }}</h1>
                         <span class="en">Project Detail</span>
                     </div>
-                </div>
-                <div class="content__success" v-if="project.is_started === 1">
-                  <p>作業開始報告メッセージが、営業担当及び元請けに送られました。<br>作業終了時は、「作業終了」ボタンを押してください。</p>
                 </div>
                 <div class="content__signal" v-if="project.is_finished === 0">
                     <ul class="flex__wrap">
@@ -33,7 +32,8 @@
                                 <div class="content__input">
                                     <div class="headline">営業担当</div>
                                     <div class="input__text">
-                                        <span>{{ project.charge.name }}</span>
+                                        <span v-if="project.charge">{{ project.charge.name }}</span>
+                                        <span v-else>未定</span>
                                     </div>
                                 </div>
                                 <div class="content__input">

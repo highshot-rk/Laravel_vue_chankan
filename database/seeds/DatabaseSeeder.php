@@ -13,15 +13,15 @@ class DatabaseSeeder extends Seeder
     {
         $this->call([
             UsersTableSeeder::class,
-            ChargesTableSeeder::class,
-            ProjectsTableSeeder::class,
-            ProjectLabelsTableSeeder::class,
-            ProjectOrderersTableSeeder::class,
+            // ChargesTableSeeder::class,
+            // ProjectsTableSeeder::class,
+            // ProjectLabelsTableSeeder::class,
+            // ProjectOrderersTableSeeder::class,
             PrefecturesTableSeeder::class,
             ManagersTableSeeder::class,
-            AdvertisementsTableSeeder::class,
-            ContractsTableSeeder::class,
-            ChargeRemarksTableSeeder::class,
+            // AdvertisementsTableSeeder::class,
+            // ContractsTableSeeder::class,
+            // ChargeRemarksTableSeeder::class,
             ProcessColorsTableSeeder::class,
         ]);
     }

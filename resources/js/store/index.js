@@ -15,6 +15,7 @@ Vue.use(Vuex)
 export default new Vuex.Store({
     components: {},
     state: {
+        tableHeaderEnable: true,
         refreshVal: 0,
         isWorkModalActive: false,
         isMemoModalActive: false,
@@ -34,10 +35,11 @@ export default new Vuex.Store({
         remarkId: null,
         zip_first: "",
         zip_second: "",
+        // 案件情報
         project: {
             name: "",
             charge_id: "",
-            worker: "",
+            worker_id: "",
             is_send_to_charge: false,
             tel: "",
             zip: "",
@@ -47,12 +49,20 @@ export default new Vuex.Store({
             project_type: "",
             process_color_id: ""
         },
+        // 担当者情報
+        project_charge: {
+            name: '',
+            id: '',
+        },
+        // 元請け情報
         project_orderers: [],
         project_orderer: {
             company: '',
             phone: '',
+            president: '',
         },
         project_orderer_id: '',
+        // 作業日
         work_on_array: [{
             id: '',
             year: '',
@@ -73,14 +83,15 @@ export default new Vuex.Store({
         /**** 案件登録モーダルにて使用する項目 END ****/
     },
     getters: {
+        getTableHeaderEnable: state => state.tableHeaderEnable,
         getRefreshVal: state => {
             return state.refreshVal;
         },
         getWorkModalActive: state => state.isWorkModalActive,
         getMemoModalActive: state => state.isMemoModalActive,
-        getPdfModalActive: state  => state.isPdfModalActive,
-        getBasicDate: state       => state.basicDate,
-        getScrollHeight: state    => state.scroll_height,
+        getPdfModalActive: state => state.isPdfModalActive,
+        getBasicDate: state => state.basicDate,
+        getScrollHeight: state => state.scroll_height,
         // カレンダーに格納する日付の配列一覧（1ヵ月前〜2ヵ月後）
         getCalendars: (state, getters) => {
             let basicDay = getters.getBasicDate;
@@ -103,16 +114,19 @@ export default new Vuex.Store({
             }
             return state.calendars;
         },
-        getManagerLists: state  => state.managerLists,
-        getWorks: state         => state.works,
-        getWorkInfo: state      => state.workInfo,
-        infoId: state           => state.infoId,
-        memoBefore: state       => state.memoBefore,
-        getBeforeDate: state    => state.beforeDate,
-        content: state          => state.content,
-        getResetFlg: state      => state.reset_flg,
+        getManagerLists: state => state.managerLists,
+        getWorks: state => state.works,
+        getWorkInfo: state => state.workInfo,
+        infoId: state => state.infoId,
+        memoBefore: state => state.memoBefore,
+        getBeforeDate: state => state.beforeDate,
+        content: state => state.content,
+        getResetFlg: state => state.reset_flg,
     },
     mutations: {
+        /*
+            各情報を取得
+        */
         // 元請け情報のセット
         async fetchProjectOrderers(state) {
             // 元請け情報を取得
@@ -124,19 +138,36 @@ export default new Vuex.Store({
                     }
                 })
                 .catch(result => {
-                    alert('元請け情報の取得に失敗しました。')
+                    // alert('元請け情報の取得に失敗しました。')
                 })
         },
-
         // 営業担当者のセット
         async fetchCharges(state) {
             // 担当者情報を取得
             await axios.get('/api/charges', {})
                 .then(result => {
+
                     state.managerLists = result.data;
+                    var orders = result.data.map(item => {
+                        return item.order
+                    })
+                    let count = state.managerLists.length + 1
+                    var undefinedValue = false
+                    for (let i = 0; i < count; i++) {
+                        if (orders.includes(i + 1)) {
+
+                        } else {
+                            if (undefinedValue) {
+
+                            } else {
+                                state.managerLists.splice(i, 0, { name: "未定", order: (i + 1) });
+                                undefinedValue = true
+                            }
+                        }
+                    }
                 })
                 .catch(result => {
-                    alert('担当者情報の取得に失敗しました。')
+                    // alert('担当者情報の取得に失敗しました。')
                 });
         },
         // 案件情報・メモ情報のセット
@@ -145,10 +176,15 @@ export default new Vuex.Store({
             let projects
             await axios.get('/api/projects', {})
                 .then(result => {
-                    projects = result.data;
+                    let projectss;
+                    projectss = result.data;
+                    projects = projectss.reverse();
+                    console.log(projects)
                 })
-                .catch(result => {
-                    alert('案件情報の取得に失敗しました。')
+                .catch(error => {
+                    // alert(error)
+                    // alert('案件情報の取得に失敗しました。')
+                    state.tableHeaderEnable = true
                 });
             // メモ情報を取得
             let chargeRemarks
@@ -156,16 +192,21 @@ export default new Vuex.Store({
                 .then(result => {
                     chargeRemarks = result.data
                 })
-                .catch(result => {
-                    alert('メモ情報の取得に失敗しました。')
+                .catch(error => {
+                    // alert(error)
+                    // alert('メモ情報の取得に失敗しました。')
+                    state.tableHeaderEnable = true
                 });
+
+
             // calendarsへ案件情報・メモ情報をセット
             for (let i = 0; i < state.calendars.length; i++) {
                 /**
                  * 案件・メモ情報
                  */
-                // calendarの施工日に該当する案件情報があるかチェック
+                // 日付などの値から、"/"や"-"を削除する
                 let filterDate = state.calendars[i].date.replaceAll('/', '-');
+                // calendarの施工日に該当する案件情報があるかチェック
                 for (let timeType = 0; timeType < 3; timeType++) {
                     // timeType: 1-AM, 2-PM, 0-案件調整
                     let tempProjects = [];
@@ -176,26 +217,41 @@ export default new Vuex.Store({
 
                     // 比較用配列
                     const diffTarget = [];
+
                     // 管理者の人数分のループ処理
                     for (let j = 0; j < state.managerLists.length; j++) {
                         let filterChargeId = state.managerLists[j].id;
                         let filterTimeType = timeType;
                         // プロジェクト
-                        tempProjects[j] = projects.filter(project => {
-                            return (project.work_on_date === filterDate) &&
-                                (project.charge.id === filterChargeId) &&
-                                (project.time_type === filterTimeType);
-                        });
+                        // filter：与えられた関数によって実装されたテストに合格したすべての配列からなる新しい配列を生成
+                        if (state.managerLists[j].name == "未定") {
+                            tempProjects[j] = projects.filter(project => {
+                                return (project.work_on_date === filterDate) &&
+                                    (project.worker === null || project.worker == 0) &&
+                                    (project.time_type === filterTimeType);
+
+                            });
+                        } else {
+                            tempProjects[j] = projects.filter(project => {
+                                if(project.charge){
+                                    return (project.work_on_date === filterDate) &&
+                                    (project.worker === state.managerLists[j].id) &&
+                                    (project.time_type === filterTimeType);
+                                }else{
+                                    return false;
+                                }
+                            });
+                        }
                         // メモ
                         tempRemarks[j] = chargeRemarks.filter(chargeRemark => {
                             return (chargeRemark.work_on_date === filterDate) &&
-                                (chargeRemark.charge.id === filterChargeId) &&
+                                (chargeRemark.charge ? chargeRemark.charge.id === filterChargeId : (state.managerLists[j].name == "未定")) &&
                                 (chargeRemark.time_type === filterTimeType);
                         });
-
                         // プロジェクトの最大数を取得
                         let projectItem = tempProjects[j].length
                         projectCount.push(projectItem)
+
                         // メモの最大数を取得
                         let remarkItem = tempRemarks[j].length
                         remarkCount.push(remarkItem)
@@ -207,10 +263,10 @@ export default new Vuex.Store({
                     // 日付ごとのAM・PM・案件調整の最大列数
                     let lineMaxNumber = 0;
                     lineMaxNumber = Math.max.apply(null, diffTarget);
-
                     // 必要な行数の分だけループ
+                    let k = lineMaxNumber;
                     for (let j = 0; j < lineMaxNumber; j++) {
-
+                        k--;
                         // 行数を追加
                         let columns = [];
                         switch (timeType) {
@@ -243,18 +299,19 @@ export default new Vuex.Store({
                             let project = tempProjects[z].pop();
                             // メモの配列
                             let chargeRemark = tempRemarks[z].pop();
-                            let chargeNumber = state.managerLists[z].id;
-
                             // メモ・架設の配列を結合
-
-
                             // 案件情報を登録
-                            if(project) {
-                            // メモの内容で、メモの有無判定
+                            if (project) {
+                                let chargesName;
+                                if(project.charge){
+                                    chargesName = project.charge.name;
+                                }else{
+                                    chargesName = "未定";
+                                }
+                                // メモの内容で、メモの有無判定
                                 let tempProject = {
                                     projectId: project.id,
                                     projectAddress: project.address,
-                                    projectCharge: chargeNumber,
                                     projectColor: project.process_color_id,
                                     projectYear: project.work_on_date.split('-')[0],
                                     projectMonth: project.work_on_date.split('-')[1],
@@ -265,16 +322,19 @@ export default new Vuex.Store({
                                     projectZip: project.zip,
                                     projectTel: project.tel,
                                     projectRoad: project.road,
-                                    userName: project.project_orderer.president,        // 営業担当名
-                                    userCompany: project.project_orderer.company,       // 会社名
-                                    projectWorker: project.worker,
+                                    userName: project.project_orderer.president, // 元請け代表名
+                                    userCompany: project.project_orderer.company, // 元請け会社名
+                                    chargeName: chargesName, // 担当者名
+                                    projectWorker: project.worker_id,
                                     projectRemark: project.remark,
                                     projectOrdererId: project.project_orderer.id,
                                 }
-                                columns[j].works[z] = tempProject;
+                                if(columns[j]){
+                                    columns[j].works[z] = tempProject;
+                                }
                             }
                             // メモ情報を登録
-                            if(chargeRemark) {
+                            if (chargeRemark) {
                                 let tempRemarks = {
                                     content: chargeRemark.remarks,
                                     remarkId: chargeRemark.id,
@@ -283,20 +343,45 @@ export default new Vuex.Store({
                                 console.log('ターゲットエリア：' + targetArea)
                                 console.log('ターゲットエリア：' + columns[targetArea])
                                 console.log('1：' + columns[1])
-                                columns[j].memos[z] = tempRemarks;
+                                if (project) {
+                                    columns.splice(j + 1, 0, {
+                                        day: false,
+                                        add: true,
+                                        remove: true,
+                                        works: [],
+                                        memos: []
+                                    });
+                                    columns[j + 1].memos[z] = tempRemarks;
+                                    j += 1;
+                                } else {
+                                    columns[j].memos[z] = tempRemarks;
+                                }
                             }
                         }
                     }
                 }
             }
             console.log('load data has finished')
+            state.tableHeaderEnable = true
             Vue.set(state, 'refreshVal', state.refreshVal + 1);
         },
+        // 基準日
+        setBasicDate(state, val) {
+            state.basicDate = dayjs(val)
+        },
+
+        /*
+            初期設定処理
+        */
         // カレンダー初期表示用の処理を行う
         createCalendars(state) {
+            // 基準日（今日）
             let basicDay = state.basicDate
+                // 1か月前の値
             let beforeMonth = basicDay.subtract(1, 'months');
-            let afterMonth = basicDay.add(2, 'months');
+            // 1か月後の値
+            let afterMonth = basicDay.add(1, 'months');
+            // 全ての日付
             let totalDays = afterMonth.diff(beforeMonth, 'day');
             for (var i = 0; i < totalDays; i++) {
                 state.calendars[i] = {
@@ -314,7 +399,11 @@ export default new Vuex.Store({
             this.commit('fetchProjectsAndRemarks');
             state.basicDate = dayjs(date.date);
         },
-        // AM行を追加する
+
+        /*
+            追加機能
+        */
+        // 追加：AM行
         amAddColumn(state, lineNumber) {
             state.calendars[lineNumber]["amcolumns"].push({
                 day: false,
@@ -325,7 +414,7 @@ export default new Vuex.Store({
             });
             Vue.set(state, 'refreshVal', state.refreshVal + 1);
         },
-        // PM行を追加する
+        // 追加：PM行
         pmAddColumn(state, lineNumber) {
             state.calendars[lineNumber]["pmcolumns"].push({
                 day: false,
@@ -336,7 +425,7 @@ export default new Vuex.Store({
             });
             Vue.set(state, 'refreshVal', state.refreshVal + 1);
         },
-        // 調整行を追加する
+        // 追加：案件調整行
         yetAddColumn(state, lineNumber) {
             state.calendars[lineNumber]["yetcolumns"].push({
                 day: false,
@@ -347,7 +436,7 @@ export default new Vuex.Store({
             });
             Vue.set(state, 'refreshVal', state.refreshVal + 1);
         },
-        // AM行を削除する
+        // 削除：AM行
         amRemoveColumn(state, { calendarId, lineId }) {
             // 行に含まれる案件を一括削除を行う為の処理を追加する（API呼び出し）
             let removeProjects = [];
@@ -388,7 +477,7 @@ export default new Vuex.Store({
             state.calendars[calendarId].amcolumns.splice(lineId, 1);
             Vue.set(state, 'refreshVal', state.refreshVal + 1);
         },
-        // PM行を削除する
+        // 削除：PM行
         pmRemoveColumn(state, { calendarId, lineId }) {
             // 行に含まれる案件を一括削除を行う為の処理を追加する（API呼び出し）
             let removeProjects = [];
@@ -429,7 +518,7 @@ export default new Vuex.Store({
             state.calendars[calendarId].pmcolumns.splice(lineId, 1);
             Vue.set(state, 'refreshVal', state.refreshVal + 1);
         },
-        // 案件調整を削除する
+        // 削除：案件調整
         yetRemoveColumn(state, { calendarId, lineId }) {
             // 行に含まれる案件を一括削除を行う為の処理を追加する（API呼び出し）
             let removeProjects = [];
@@ -470,22 +559,29 @@ export default new Vuex.Store({
             state.calendars[calendarId].yetcolumns.splice(lineId, 1);
             Vue.set(state, 'refreshVal', state.refreshVal + 1);
         },
-        setBasicDate(state, val) {
-            state.basicDate = dayjs(val)
-        },
 
+        /*
+            日付移動機能
+        */
+        // 「前月へ」機能
         backCalendarChange(state) {
             state.basicDate = state.basicDate.subtract(1, 'month');
             // 指定した期間の案件取得・メモ取得APIを呼び出し、calendarへ反映する
             this.commit('fetchProjectsAndRemarks');
             Vue.set(state, 'refreshVal', state.refreshVal + 1);
         },
+        // 「翌月へ」機能
         nextCalendarChange(state) {
             state.basicDate = state.basicDate.add(1, 'month');
             // 指定した期間の案件取得・メモ取得APIを呼び出し、calendarへ反映する
             this.commit('fetchProjectsAndRemarks');
             Vue.set(state, 'refreshVal', state.refreshVal + 1);
         },
+
+        /*
+            モーダル機能
+        */
+        // モーダル：案件
         toggleWorkModal(state) {
             if (!state.isMemoModalActive) {
                 this.commit('setIsWorkLoading', false);
@@ -493,226 +589,28 @@ export default new Vuex.Store({
             state.isWorkModalActive = !state.isWorkModalActive;
             Vue.set(state, 'refreshVal', state.refreshVal + 1);
         },
+        // モーダル：メモ
         toggleMemoModal(state) {
             state.isMemoModalActive = !state.isMemoModalActive;
             Vue.set(state, 'refreshVal', state.refreshVal + 1);
         },
+        // モーダル；PDF
         togglePdfModal(state) {
             state.isPdfModalActive = !state.isPdfModalActive;
             Vue.set(state, 'refreshVal', state.refreshVal + 1);
         },
-
-        // メモの登録
-        registerMemo(state, { infoId, content }) {
-            // 返却されたIDをcalendarsの値へ返す
-            state.calendars[infoId.calendarId][infoId.columnStatus][infoId.lineId].memos[infoId.memberId] = {
-                content: content
-            };
-            let timeType = 0;
-            switch (infoId.columnStatus) {
-                case 'amcolumns':
-                    timeType = 1;
-                    break;
-                case 'pmcolumns':
-                    timeType = 2;
-                    break;
-                case 'yetcolumns':
-                    timeType = 0;
-                    break;
-            };
-            let params = {
-                charge_id: state.managerLists[infoId.memberId].id,
-                time_type: timeType,
-                work_on: state.calendars[infoId.calendarId].date.replaceAll('/', '-'),
-                remarks: content,
-            };
-            // メモ情報のIDがセットされていない場合は登録API、セットされている場合は更新APIを呼び出す
-            if (!state.remarkId) {
-                // 登録API
-                axios
-                    .post('/api/charge-remarks', params)
-                    // 成功した場合
-                    .then(result => {
-                        // 成功アラート
-                        console.log('メモの登録完了');
-
-                        // 返却されたIDをcalendarsの値へ返す
-                        state.calendars[infoId.calendarId][infoId.columnStatus][infoId.lineId].memos[infoId.memberId].remarkId = result.id;
-                    })
-                    // 失敗した場合
-                    .catch(result => {
-                        // 失敗アラート
-                        console.log('メモの登録に失敗しました', result);
-                    });
-            } else {
-                // 更新API
-                axios
-                    .put('/api/charge-remarks/' + state.remarkId, params)
-                    .then(result => {
-                        console.log('メモの更新完了');
-                    })
-                    .catch(result => {
-                        console.log('メモの更新に失敗しました', result);
-                    });
-            }
-            Vue.set(state, 'refreshVal', state.refreshVal + 1);
-        },
-        // メモの削除
-        deleteMemo(state, { infoId }) {
-            // メモ情報のIDがセットされている場合のみ削除する
-            if (state.remarkId) {
-                axios.delete(`/api/charge-remarks/${state.remarkId}`)
-                    .then(result => {
-                        console.log('delete memo has succeeded!');
-                        // 成功したタイミングでDOMから削除する
-                        state.calendars[infoId.calendarId][infoId.columnStatus][infoId.lineId].memos[infoId.memberId] = "";
-                        Vue.set(state, 'refreshVal', state.refreshVal + 1);
-                    })
-                    .catch(result => {
-                        console.log('error', result);
-                    });
-            }
-
-        },
-        // メモの移動
-        sendid(state, { calendarId, lineId, memberId, columnStatus }) {
-            state.infoId.calendarId = calendarId;
-            state.infoId.lineId = lineId;
-            state.infoId.columnStatus = columnStatus;
-            state.infoId.memberId = memberId;
-        },
-        // 架設登録
-        registerWork(state) {
-            // 元請け情報を取得する
-            // 登録した現場の元請け会社ID
-            let primeContactorId = state.project_orderer_id;
-            // 元請けの配列一覧
-            let primeContactors = state.project_orderers;
-            // 元請けの配列から、登録した現場の元請け会社IDと同じ要素を取得する
-            let targetPrimeContactor = primeContactors.find((object) => {
-                return (object.id === primeContactorId);
-            });
-
-            // リクエストパラメータをセット
-            let projects = [];
-            for (var i = 0; i < state.work_on_array.length; i++) {
-                let projectName = state.project.name;
-                let projectCharge = state.project.charge_id;
-                let projectWorker = state.project.worker;
-                let projectYear = state.work_on_array[i].year;
-                let projectMonth = state.work_on_array[i].month;
-                let projectDay = state.work_on_array[i].day;
-                let projectTimeType = state.work_on_array[i].time_type;
-                let projectType = 0;                                     // 架設として登録
-                let projectTel = state.project.tel;
-                let projectZip = state.zip_first + state.zip_second;
-                let projectAddress = state.project.address;
-                let projectRoad = state.project.road;
-                let projectRemark = state.project.remark;
-                let projectColor = state.project.process_color_id;       // 色
-                let userName = targetPrimeContactor.president;           // 元請け代表者名
-                let userCompany = targetPrimeContactor.company;          // 元請け会社名
-                projects[i] = {
-                    projectName, projectCharge, projectWorker, projectYear, projectMonth, projectDay, projectTimeType, projectType, projectTel, projectZip, projectAddress, projectRoad, projectRemark, projectColor, userName, userCompany
-                };
-            }
-
-            /* const params = this.setParams(); */
-            state.project.work_on_date = state.work_on_array.map(item => {
-                return {
-                    id: item.id,
-                    work_on: item.year + '-' + item.month + '-' + item.day,
-                    time_type: item.time_type,
-                    scheduled_arrival_time_from: item.scheduled_arrival_time_from,
-                    scheduled_arrival_time_to: item.scheduled_arrival_time_to,
-                }
-            });
-            state.project.zip = state.zip_first + state.zip_second;
-            const params = {
-                project: state.project,
-                project_orderer: state.project_orderer,
-                project_orderer_id: state.project_orderer_id,
-                is_register_phone_later: state.is_register_phone_later,
-                is_new_project_orderer: state.is_new_project_orderer,
-                deleted_project_ids: state.deleted_project_ids,
-            };
-
-            // 登録APIを呼び出し
-            axios.post('/api/projects', params)
-                .then(result => {
-                    console.log('register work has succeeded!');
-                    // 複数登録がある場合の想定
-                    for (let i = 0; i < projects.length; i++) {
-                        // 該当する日付
-                        let targetDate = projects[i].projectYear + '/' + projects[i].projectMonth + '/' + projects[i].projectDay;
-                        // AM or PMの設定
-                        let targetColumn = '';
-                        if (projects[i].projectTimeType == 1) {
-                            targetColumn = 'amcolumns';
-                        } else if (projects[i].projectTimeType == 2) {
-                            targetColumn = 'pmcolumns';
-                        } else {
-                            targetColumn = 0;
-                        }
-                        // 該当する配列を指定
-                        let targetProject = state.calendars.filter(e => e.date == targetDate);
-                        // データを挿入　※挿入先の日付・時間タイプにて、既に案件orメモが登録されている場合に対応できるようにする
-                        if ((targetProject[0][state.infoId.columnStatus][state.infoId.lineId].works[state.infoId.memberId]) ||
-                            (targetProject[0][state.infoId.columnStatus][state.infoId.lineId].memos[state.infoId.memberId])) {
-                            state.infoId.lineId++;
-                            if (state.infoId.columnStatus === 'amcolumns') {
-                                targetProject[0][state.infoId.columnStatus].push({ day: false, add: true, remove: true, works: [], memos: [] }, );
-                            } else {
-                                targetProject[0][state.infoId.columnStatus].push({ day: false, add: true, remove: true, works: [], memos: [] }, );
-                            }
-                        }
-                        // 案件情報を登録する
-                        targetProject[0][state.infoId.columnStatus][state.infoId.lineId].works[state.infoId.memberId] = projects[i];
-                        // 案件にIDを指定
-                        targetProject[0][state.infoId.columnStatus][state.infoId.lineId].works[state.infoId.memberId].projectId = result.id;
-                        Vue.set(state, 'refreshVal', state.refreshVal + 1);
-                    }
-                    state.project = {
-                        name: "",
-                        charge_id: "",
-                        worker: "",
-                        project_type: "",
-                        is_send_to_charge: false,
-                        tel: "",
-                        zip: "",
-                        address: "",
-                        road: "",
-                        remark: "",
-                        process_color_id: ""
-                    };
-                    state.work_on_array = [];
-                    state.work_on_array.push({
-                        id: '',
-                        year: '',
-                        month: '',
-                        day: '',
-                        time_type: 1,
-                        project_type: '',
-                        scheduled_arrival_time_from: null,
-                        scheduled_arrival_time_to: null,
-                    });
-                })
-                .catch(result => {
-                    errorHandling.errorMessage(result);
-                });
-            Vue.set(state, 'refreshVal', state.refreshVal + 1);
-        },
-        // 工程移動
-        sendWorkId(state, { calendarId, lineId, memberId, columnStatus }) {
-            state.workInfo.calendarId = calendarId;
-            state.workInfo.lineId = lineId;
-            state.workInfo.columnStatus = columnStatus;
-            state.workInfo.memberId = memberId;
-        },
         // モーダル表示する案件をセット
-        showWork(state) {
+        showWork(state, columnStatus) {
             // 営業担当者、施工日、時間タイプをセットする
             state.project.charge_id = state.managerLists[state.infoId.memberId].id;
+            // if(columnStatus !== 'yetcolumns') {
+            //     // 選択したモーダルの箇所が「案件調整」の場合
+            console.log(state.project.charge_id)
+            state.project.worker_id = state.managerLists[state.infoId.memberId].id;
+            // } else {
+            //     // 選択したモーダルが「案件調整以外」の場合
+            //     state.project.worker_id = '';
+            // }
             let workOn = state.calendars[state.infoId.calendarId].date.split('/');
             let timeType = -1;
             switch (state.infoId.columnStatus) {
@@ -755,7 +653,278 @@ export default new Vuex.Store({
             // state.workInfo.memberId = memberId;
         },
 
-        // 工程表のドラッグ&ドロップのメソッド
+        /*
+            架設機能
+        */
+        // 架設登録
+        registerWork(state) {
+            console.log(state)
+                /*
+                　　元請け情報を取得する
+                */
+                // 登録した現場の元請け会社ID
+            let primeContactorId = state.project_orderer_id;
+            // 元請けの配列一覧
+            let primeContactors = state.project_orderers;
+            // 元請けの配列から、登録した現場の元請け会社IDと同じ要素を取得する
+            let targetPrimeContactor = primeContactors.find((object) => {
+                return (object.id === primeContactorId);
+            });
+
+            /*
+            　　担当者情報を取得する
+            */
+            // 担当者の配列から、登録した現場の担当者IDと同じ要素を取得する
+            let targetProjectCharge = state.managerLists.find((object) => {
+                return (object.id === state.project.charge_id);
+            });
+
+            // 登録ずみと異なる情報を取得する
+
+            /*
+            　　リクエストをパラーメーターに設定
+            */
+            let projects = [];
+            for (var i = 0; i < state.work_on_array.length; i++) {
+                let projectName = state.project.name;
+                let projectCharge = state.project.charge_id;
+                let projectWorker = state.project.worker_id;
+                let projectYear = state.work_on_array[i].year;
+                let projectMonth = state.work_on_array[i].month;
+                let projectDay = state.work_on_array[i].day;
+                let projectTimeType = state.work_on_array[i].time_type;
+                let projectType = 0; // 架設として登録
+                let projectTel = state.project.tel;
+                let projectZip = state.zip_first + state.zip_second;
+                let projectAddress = state.project.address;
+                let projectRoad = state.project.road;
+                let projectRemark = state.project.remark;
+                let projectColor = state.project.process_color_id; // 色
+                let userCompany = null;
+                // 元請け会社の新規の場合・既存の場合で三項演算子
+                if (state.project_orderer.company) {
+                    // 新規の場合
+                    userCompany = state.project_orderer.company;
+                } else {
+                    // 既存の値からの場合
+                    userCompany = targetPrimeContactor.company;
+                }
+                // 元請け会社名
+                let chargeName;
+                if(targetProjectCharge){
+                    chargeName = targetProjectCharge.name; // 担当者名
+                }else{
+                    chargeName = "未定"; // 担当者名
+                }
+                projects[i] = {
+                    projectName,
+                    projectCharge,
+                    projectWorker,
+                    projectYear,
+                    projectMonth,
+                    projectDay,
+                    projectTimeType,
+                    projectType,
+                    projectTel,
+                    projectZip,
+                    projectAddress,
+                    projectRoad,
+                    projectRemark,
+                    projectColor,
+                    userCompany,
+                    chargeName,
+                };
+            }
+
+            /* const params = this.setParams(); */
+            state.project.work_on_date = state.work_on_array.map(item => {
+                return {
+                    id: item.id,
+                    work_on: item.year + '-' + item.month + '-' + item.day,
+                    time_type: item.time_type,
+                    scheduled_arrival_time_from: item.scheduled_arrival_time_from,
+                    scheduled_arrival_time_to: item.scheduled_arrival_time_to,
+                }
+            });
+            state.project.zip = state.zip_first + state.zip_second;
+            const params = {
+                project: state.project,
+                project_orderer: state.project_orderer,
+                project_orderer_id: state.project_orderer_id,
+                is_register_phone_later: state.is_register_phone_later,
+                is_new_project_orderer: state.is_new_project_orderer,
+                deleted_project_ids: state.deleted_project_ids,
+            };
+
+            /*
+            　　案件登録APIから、パラーメーターをDBに登録
+            */
+            axios.post('/api/projects', params)
+                .then(result => {
+                    console.log('register work has succeeded!');
+                    // 複数登録がある場合の想定
+                    /*
+                    　　Vuexに登録
+                    */
+                    for (let i = 0; i < projects.length; i++) {
+                        // 該当する日付
+                        let targetDate = projects[i].projectYear + '/' + projects[i].projectMonth + '/' + projects[i].projectDay;
+                        // AM or PMの設定
+                        let targetColumn = '';
+                        if (projects[i].projectTimeType == 1) {
+                            targetColumn = 'amcolumns';
+                        } else if (projects[i].projectTimeType == 2) {
+                            targetColumn = 'pmcolumns';
+                        } else {
+                            targetColumn = 0;
+                        }
+
+                        // 該当する配列を指定
+                        let targetProject = state.calendars.filter(e => e.date == targetDate);
+                        // データを挿入　※挿入先の日付・時間タイプにて、既に案件orメモが登録されている場合に対応できるようにする
+                        if ((targetProject[0][state.infoId.columnStatus][state.infoId.lineId].works[state.infoId.memberId]) ||
+                            (targetProject[0][state.infoId.columnStatus][state.infoId.lineId].memos[state.infoId.memberId])) {
+                            state.infoId.lineId++;
+                            if (state.infoId.columnStatus === 'amcolumns') {
+                                targetProject[0][state.infoId.columnStatus].push({ day: false, add: true, remove: true, works: [], memos: [] }, );
+                            } else {
+                                targetProject[0][state.infoId.columnStatus].push({ day: false, add: true, remove: true, works: [], memos: [] }, );
+                            }
+                        }
+                        // 案件情報を登録する
+                        targetProject[0][state.infoId.columnStatus][state.infoId.lineId].works[state.infoId.memberId] = projects[i];
+                        // 案件にIDを指定
+                        targetProject[0][state.infoId.columnStatus][state.infoId.lineId].works[state.infoId.memberId].projectId = result.id;
+                        Vue.set(state, 'refreshVal', state.refreshVal + 1);
+                    }
+                })
+                .catch(result => {
+                    errorHandling.errorMessage(result);
+                });
+                Vue.set(state, 'refreshVal', state.refreshVal + 1);
+                window.location.reload();
+
+
+            // 登録情報をリセットする
+            state.project = {
+                name: "",
+                charge_id: "",
+                worker_id: "",
+                project_type: "",
+                is_send_to_charge: false,
+                tel: "",
+                zip: "",
+                address: "",
+                road: "",
+                remark: "",
+                process_color_id: ""
+            };
+            state.work_on_array = [];
+            state.work_on_array.push({
+                id: '',
+                year: '',
+                month: '',
+                day: '',
+                time_type: 1,
+                project_type: '',
+                scheduled_arrival_time_from: null,
+                scheduled_arrival_time_to: null,
+            });
+        },
+        // 架設移動
+        sendWorkId(state, { calendarId, lineId, memberId, columnStatus }) {
+            state.workInfo.calendarId = calendarId;
+            state.workInfo.lineId = lineId;
+            state.workInfo.columnStatus = columnStatus;
+            state.workInfo.memberId = memberId;
+        },
+
+        /*
+            メモ機能
+        */
+        // メモ：登録
+        registerMemo(state, { infoId, content }) {
+            // 返却されたIDをcalendarsの値へ返す
+            state.calendars[infoId.calendarId][infoId.columnStatus][infoId.lineId].memos[infoId.memberId] = {
+                content: content
+            };
+            let timeType = 0;
+            switch (infoId.columnStatus) {
+                case 'amcolumns':
+                    timeType = 1;
+                    break;
+                case 'pmcolumns':
+                    timeType = 2;
+                    break;
+                case 'yetcolumns':
+                    timeType = 0;
+                    break;
+            };
+            let params = {
+                // charge_id: state.managerLists[infoId.memberId].id,
+                worker_id: state.managerLists[infoId.memberId].id,
+                time_type: timeType,
+                work_on: state.calendars[infoId.calendarId].date.replaceAll('/', '-'),
+                remarks: content,
+            };
+            // メモ情報のIDがセットされていない場合は登録API、セットされている場合は更新APIを呼び出す
+            if (!state.remarkId) {
+                // 登録API
+                axios
+                    .post('/api/charge-remarks', params)
+                    // 成功した場合
+                    .then(result => {
+                        // 成功アラート
+                        console.log('メモの登録完了');
+
+                        // 返却されたIDをcalendarsの値へ返す
+                        state.calendars[infoId.calendarId][infoId.columnStatus][infoId.lineId].memos[infoId.memberId].remarkId = result.id;
+                    })
+                    // 失敗した場合
+                    .catch(result => {
+                        // 失敗アラート
+                        console.log('メモの登録に失敗しました', result);
+                    });
+            } else {
+                // 更新API
+                axios
+                    .put('/api/charge-remarks/' + state.remarkId, params)
+                    .then(result => {
+                        console.log('メモの更新完了');
+                        state.calendars[infoId.calendarId][infoId.columnStatus][infoId.lineId].memos[infoId.memberId].remarkId = state.remarkId;
+                    })
+                    .catch(result => {
+                        console.log('メモの更新に失敗しました', result);
+                    });
+            }
+            Vue.set(state, 'refreshVal', state.refreshVal + 1);
+        },
+        // メモ：削除
+        deleteMemo(state, { infoId }) {
+            // メモ情報のIDがセットされている場合のみ削除する
+            if (state.remarkId) {
+                axios.delete(`/api/charge-remarks/${state.remarkId}`)
+                    .then(result => {
+                        console.log('delete memo has succeeded!');
+                        // 成功したタイミングでDOMから削除する
+                        state.calendars[infoId.calendarId][infoId.columnStatus][infoId.lineId].memos[infoId.memberId] = "";
+                        Vue.set(state, 'refreshVal', state.refreshVal + 1);
+                    })
+                    .catch(result => {
+                        console.log('error', result);
+                    });
+            }
+
+        },
+        // メモ：移動
+        sendid(state, { calendarId, lineId, memberId, columnStatus }) {
+            state.infoId.calendarId = calendarId;
+            state.infoId.lineId = lineId;
+            state.infoId.columnStatus = columnStatus;
+            state.infoId.memberId = memberId;
+        },
+
+        // *** 工程表のドラッグ&ドロップのメソッド ***
         // 工程表を案件を移動する際、前の情報を保存する
         choosetWork(state, targetWork) {
             state.beforeDate = targetWork;
@@ -786,6 +955,7 @@ export default new Vuex.Store({
             state.calendars[id][timeStatus][lineNumber].works[target] = state.beforeDate;
             // 営業担当者の番号をセット
             state.calendars[id][timeStatus][lineNumber].works[target].projectCharge = state.managerLists[target].id;
+
             // 時間タイプをセット
             state.calendars[id][timeStatus][lineNumber].works[target].projectTimeType = timeStatusValue;
             // 施工日_年をセット
@@ -804,7 +974,8 @@ export default new Vuex.Store({
                 // 作業日
                 work_on: state.calendars[id].date.replaceAll('/', '-'),
                 // 担当者
-                charge_id: state.managerLists[target].id,
+                // charge_id: state.managerLists[target].id,
+                worker_id: state.managerLists[target].id ? state.managerLists[target].id : '0',
             };
 
             // 選択した案件のIDを取得
@@ -856,7 +1027,8 @@ export default new Vuex.Store({
             }
 
             let params = {
-                charge_id: state.managerLists[target].id,
+                // charge_id: state.managerLists[target].id,
+                charge_id: state.managerLists[target].id ? state.managerLists[target].id : 0,
                 time_type: timeType,
                 work_on: state.calendars[id].date.replaceAll('/', '-'),
                 remarks: state.beforeDate.content,
@@ -866,9 +1038,9 @@ export default new Vuex.Store({
             let moveMemoId = state.calendars[id][timeStatus][lineNumber].memos[target].remarkId
             // ライブラリaxiosを用いたAPI接続で、DBに移動の情報を登録する
             axios
-                .put('/api/charge-remarks/' + moveMemoId , params)
+                .put('/api/charge-remarks/' + moveMemoId, params)
                 .then(result => {
-                    if(beforeMemo || beforeWork) {
+                    if (beforeMemo || beforeWork) {
                         beforeMemo = '';
                         beforeWork = '';
                     }
@@ -944,8 +1116,8 @@ export default new Vuex.Store({
         setChargeId(state, val) {
             state.charge_id = val;
         },
-        setWorker(state, val) {
-            state.worker = val;
+        setWorkerId(state, val) {
+            state.worker_id = val;
         },
         setIsSendToCharge(state, val) {
             state.is_send_to_charge = val;
@@ -973,6 +1145,9 @@ export default new Vuex.Store({
         },
         setProjectOrderer(state, val) {
             state.project_orderer = val;
+        },
+        setProjectCharge(state, val) {
+            state.project_charge = val;
         },
         setCompany(state, val) {
             state.company = val;
@@ -1022,19 +1197,23 @@ export default new Vuex.Store({
         setScrollHeight(state, val) {
             state.scroll_height = val;
         },
+        setTableHeaderEnable(state, val) {
+            state.tableHeaderEnable = val
+        },
         changeManagerList(state, val) {
             const value = state.managerLists[val.oldIndex];
-            const id = value["id"];
-            const afterSort = state.managerLists[val.newIndex]["sort"];
+            const id = value["id"] ? value["id"] : 0;
+            const afterSort = val.newIndex + 1;
+            const currentSort = val.oldIndex + 1
 
             var params = {
                 sort: afterSort,
+                currentorder: currentSort
             };
-
+            console.log(params)
             axios.post(`/api/charges/sort/${id}`, params)
                 .then(result => {
                     console.log("sort順更新完了");
-
                     if (val.newIndex < val.oldIndex) {
                         // 移動元の方が大きければ、全件ソート番号をインクリメント
                         for (let i = val.newIndex; i <= val.oldIndex - 1; i++) {
@@ -1048,7 +1227,7 @@ export default new Vuex.Store({
                     }
 
                     // 移動元のソート番号を移動先ソート番号に更新する
-                    state.managerLists[val.oldIndex]["sort"] = afterSort;
+                    state.managerLists[val.oldIndex]["order"] = afterSort;
 
                     // 並び替え処理
                     const tail = state.managerLists.slice(val.oldIndex + 1);
@@ -1067,7 +1246,6 @@ export default new Vuex.Store({
             state.isWorkLoading = val;
         }
     },
-
     actions: {
         // 工程表の現在地を送る
         sendid({ commit }, { calendarId, lineId, memberId, columnStatus }) {

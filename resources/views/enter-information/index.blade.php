@@ -1,31 +1,30 @@
 @include("../components/head")
 <body>
     <div id="app">
-    	{{-- <div class="modal__term">
-    		<div class="allWrapper flex__wrap">
-    			<div class="modal__term__field">
-    				<div class="returnButton">
-    					<span class="f__center">
-    						<img src="{{ asset('assets/img/icon_batu_white.png') }}" alt="">
-    					</span>
-    				</div>
-    				<div class="term__text">
-    					<p>ここに規約。ここに規約。ここに規約。ここに規約。</p>
-    					<p>ここに規約。ここに規約。ここに規約。ここに規約。</p>
-    					<p>ここに規約。ここに規約。ここに規約。ここに規約。</p>
-    					<p>ここに規約。ここに規約。ここに規約。ここに規約。</p>
-    					<p>ここに規約。ここに規約。ここに規約。ここに規約。</p>
-    				</div>
-    			</div>
-    		</div>
-    	</div> --}}
-    	<div class="wrap flex__wrap f__start input__area">
-    		<div class="wrap__center">
-    			<div class="allWrapper">
+        {{-- <div class="modal__term">
+            <div class="allWrapper flex__wrap">
+                <div class="modal__term__field">
+                    <div class="returnButton">
+                        <span class="f__center">
+                            <img src="{{ asset('assets/img/icon_batu_white.png') }}" alt="">
+                        </span>
+                    </div>
+                    <div class="term__text">
+                        <p>ここに規約。ここに規約。ここに規約。ここに規約。</p>
+                        <p>ここに規約。ここに規約。ここに規約。ここに規約。</p>
+                        <p>ここに規約。ここに規約。ここに規約。ここに規約。</p>
+                        <p>ここに規約。ここに規約。ここに規約。ここに規約。</p>
+                        <p>ここに規約。ここに規約。ここに規約。ここに規約。</p>
+                    </div>
+                </div>
+            </div>
+        </div> --}}
+        <div class="wrap flex__wrap f__start input__area">
+            <div class="wrap__center">
+                <div class="allWrapper">
                     <form action="{{ route('user.main_register') }}" method="POST">
                         @csrf
                         <div class="content__wrap">
-
                             <div class="content__section">
                                 {{-- バリデーションエラー時の表示 --}}
                                 @if ($errors->any())
@@ -35,7 +34,6 @@
                                     @endforeach
                                 </div>
                                 @endif
-
                                 <div class="content__header">
                                     <div class="content__title">
                                         <p class="textCenter">基本情報のご登録をお願いいたします。</p>
@@ -53,7 +51,7 @@
                                                     </div>
                                                 </div>
                                                 <div class="content__input">
-                                                    <div class="headline attention must">パスワード</div>
+                                                    <div class="headline attention must">パスワード（5文字以上）</div>
                                                     <div class="input__box">
                                                         <input class="borderType" type="password" name="password" required>
                                                     </div>
@@ -65,7 +63,7 @@
                                                     </div>
                                                 </div>
                                                 <div class="content__input">
-                                                    <div class="headline attention must">代表者の電話番号</div>
+                                                    <div class="headline attention must">代表者の携帯番号</div>
                                                     <div class="input__box">
                                                         <input class="borderType" type="text" name="phone" value="{{ old('phone') }}" required>
                                                     </div>
@@ -84,42 +82,42 @@
                                                         </select>
                                                     </div>
                                                 </div>
-                                                @foreach ($user->charges as $charge)
-                                                <input type="hidden" name="charges[{{ $loop->iteration - 1 }}][id]" value="{{ $charge->id }}">
-                                                <div class="content__input">
-                                                    <div class="headline attention must">カレンダー共有する担当者{{ $loop->iteration }}</div>
-                                                    <div class="input__box">
-                                                        <input class="borderType" type="text" name="charges[{{ $loop->iteration - 1 }}][name]" value="{{ old('charges'.($loop->iteration - 1) .'name', $charge->name) }}" required>
+                                                {{--  @foreach ($user->charges as $charge)
+                                                    <input type="hidden" name="charges[{{ $loop->iteration - 1 }}][id]" value="{{ $charge->id }}">
+                                                    <div class="content__input">
+                                                        <div class="headline attention must">カレンダー共有する担当者{{ $loop->iteration }}</div>
+                                                        <div class="input__box">
+                                                            <input class="borderType" type="text" name="charges[{{ $loop->iteration - 1 }}][name]" value="{{ old('charges'.($loop->iteration - 1) .'name', $charge->name) }}" required>
+                                                        </div>
                                                     </div>
-                                                </div>
-                                                <div class="content__input">
-                                                    <div class="headline attention must">カレンダー共有する担当者携帯番号{{ $loop->iteration }}</div>
-                                                    <div class="input__box">
-                                                        <input class="borderType" type="text" name="charges[{{ $loop->iteration - 1 }}][phone]" value="{{ old('charges.'.($loop->iteration - 1) .'.phone', $charge->phone) }}" required>
+                                                    <div class="content__input">
+                                                        <div class="headline attention must">カレンダー共有する担当者携帯番号{{ $loop->iteration }}</div>
+                                                        <div class="input__box">
+                                                            <input class="borderType" type="text" name="charges[{{ $loop->iteration - 1 }}][phone]" value="{{ old('charges.'.($loop->iteration - 1) .'.phone', $charge->phone) }}" required>
+                                                        </div>
                                                     </div>
-                                                </div>
-                                                <div class="content__input">
-                                                    <div class="headline attention must">カレンダー共有する担当者メールアドレス</div>
-                                                    <div class="input__box">
-                                                        <input class="borderType" type="text" name="charges[{{ $loop->iteration - 1 }}][email]" value="{{ old('charges'.($loop->iteration - 1) .'email', $charge->email) }}">
+                                                    <div class="content__input">
+                                                        <div class="headline attention must">カレンダー共有する担当者メールアドレス</div>
+                                                        <div class="input__box">
+                                                            <input class="borderType" type="text" name="charges[{{ $loop->iteration - 1 }}][email]" value="{{ old('charges'.($loop->iteration - 1) .'email', $charge->email) }}">
+                                                        </div>
                                                     </div>
-                                                </div>
-                                                <div class="content__input">
-                                                    <div class="headline attention must">カレンダー共有する担当者パスワード</div>
-                                                    <div class="input__box">
-                                                        <input class="borderType" type="password" name="charges[{{ $loop->iteration - 1 }}][password]" value="{{ old('charges'.($loop->iteration - 1) .'password') }}">
+                                                    <div class="content__input">
+                                                        <div class="headline attention must">カレンダー共有する担当者パスワード</div>
+                                                        <div class="input__box">
+                                                            <input class="borderType" type="password" name="charges[{{ $loop->iteration - 1 }}][password]" value="{{ old('charges'.($loop->iteration - 1) .'password') }}">
+                                                        </div>
                                                     </div>
-                                                </div>
-                                                <div class="content__input">
-                                                    <div class="headline attention must">カレンダー共有する担当者タイプ</div>
-                                                    <div class="input__box selectBox">
-                                                        <select class="bgType" name="charges[{{ $loop->iteration - 1 }}][edit_type]" value="{{ old('charges'.($loop->iteration - 1) .'edit_type', $charge->edit_type) }}">
-                                                            <option value="0" @if (old('charges'.($loop->iteration - 1) .'edit_type', $charge->edit_type) == 0) selected @endif>編集者</option>
-                                                            <option value="1" @if (old('charges'.($loop->iteration - 1) .'edit_type', $charge->edit_type) == 1) selected @endif>閲覧者</option>
-                                                        </select>
+                                                    <div class="content__input">
+                                                        <div class="headline attention must">カレンダー共有する担当者タイプ</div>
+                                                        <div class="input__box selectBox">
+                                                            <select class="bgType" name="charges[{{ $loop->iteration - 1 }}][edit_type]" value="{{ old('charges'.($loop->iteration - 1) .'edit_type', $charge->edit_type) }}">
+                                                                <option value="0" @if (old('charges'.($loop->iteration - 1) .'edit_type', $charge->edit_type) == 0) selected @endif>編集者</option>
+                                                                <option value="1" @if (old('charges'.($loop->iteration - 1) .'edit_type', $charge->edit_type) == 1) selected @endif>閲覧者</option>
+                                                            </select>
+                                                        </div>
                                                     </div>
-                                                </div>
-                                                @endforeach
+                                                @endforeach  --}}
                                                 <div class="content__confirmation">
                                                     <label class="checkbox__label">
                                                         <a href="/terms/privacy" class="textLink" target="_blank" rel="noopener">規約</a>に同意する
@@ -139,9 +137,9 @@
                             </div>
                         </div>
                     </form>
-    			</div>
-    		</div>
-    	</div>
+                </div>
+            </div>
+        </div>
     </div>
 	@include("../components/footer")
 </body>

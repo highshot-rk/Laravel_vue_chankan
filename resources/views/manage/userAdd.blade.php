@@ -9,8 +9,8 @@
                 @can('owner-only')
                 @include("../components/manage-header")
                 @endcan
-	            <admin-user-register-component></admin-user-register-component>
-	        </div>
+                <admin-user-register-component></admin-user-register-component>
+            </div>
 		</div>
 	</div>
 	@include("../components/footer")

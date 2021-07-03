@@ -38,7 +38,6 @@ class ProjectsTableSeeder extends Seeder
                 'finished_at'        => null,
                 'finish_img'         => null,
                 'url'                => null,
-                'worker'             => '作業者氏名'.$i,
             ]);
             Project::create([
                 'label'              => $i,
@@ -65,7 +64,6 @@ class ProjectsTableSeeder extends Seeder
                 'finished_at'        => null,
                 'finish_img'         => null,
                 'url'                => null,
-                'worker'             => '作業者氏名'.$i,
             ]);
         }
     }

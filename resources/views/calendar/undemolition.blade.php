@@ -24,8 +24,8 @@
                                         <yet-project-sp-component is-charge="{{ $isCharge }}" is-viewer="{{ $isViewer }}" url-prefix="{{ $urlPrefix }}"></yet-project-sp-component>
                                     </div>
 									<div class="pc">
-									<!-- PC表示 -->
-	                                @if (count($projects) > 0)
+                                    <!-- PC表示 -->
+                                    @if (count($projects) > 0)
 										<table class="matrer__list">
 											<thead>
 												<tr>
@@ -36,8 +36,8 @@
 												</tr>
 											</thead>
 											<tbody>
-	                                            @foreach ($projects as $project)
-	                                            <tr>
+                                                @foreach ($projects as $project)
+                                                <tr>
                                                     <td>
                                                         <a @if ($isCharge) href="{{ route('charge.yetproject.register', $project->id) }}" @else href="{{ route('yetproject.register', $project->id) }}" @endif>
                                                             <span class="title">{{ $project->name }}</span><br>
@@ -54,19 +54,19 @@
                                                     </td>
                                                     <td><span class="date">{{ $project->workOn() }}</span><br>
                                                         <span class="other">{{ $project->timeTypeName() }}・{{ $project->projectTypeName() }}</span><br>
-                                                        <span class="charge">{{ $project->charge->name }}</span></td>
-                                                    <td><span class="address">{{ $project->address }}</span><br>
-                                                        <span class="company">{{ $project->projectOrderer->company }}</span><br>
-                                                        <span class="phone">{{ $project->projectOrderer->tel }}</span></td>
-                                                    <td><span class="remark">{{ $project->remark }}</span></td>
-	                                            </tr>
-	                                            @endforeach
-											</tbody>
-	                                    </table>
-	                                @else
-	                                    <span>該当する案件は見つかりませんでした。</span>
-	                                @endif
-		                            </div>
+                                                        <span class="charge">{{ $project->charge->name ?? '' }}</span></td>
+                                                    <td><span class="address">{{ $project->address ?? '' }}</span><br>
+                                                        <span class="company">{{ $project->projectOrderer->company ?? '' }}</span><br>
+                                                        <span class="phone">{{ $project->projectOrderer->tel ?? '' }}</span></td>
+                                                    <td><span class="remark">{{ $project->remark ?? '' }}</span></td>
+                                                </tr>
+                                                @endforeach
+                                            </tbody>
+                                        </table>
+                                    @else
+                                        <span>該当する案件は見つかりませんでした。</span>
+                                    @endif
+                                    </div>
 								</div>
 							</div>
 						</div>

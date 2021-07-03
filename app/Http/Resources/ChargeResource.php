@@ -19,6 +19,8 @@ class ChargeResource extends ResourceCollection
                 'id'         => $item->id,
                 'user'       => $item->user,
                 'name'       => $item->name,
+                'edit_type'  => $item->edit_type,
+                'order'      => $item->show_order,
                 // 'sort'       => $item->sort,
                 'created_at' => $item->created_at,
                 'updated_at' => $item->updated_at,

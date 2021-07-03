@@ -28,7 +28,7 @@ class PrefecturesTableSeeder extends Seeder
         foreach ($prefectures as $prefecture) {
             Prefecture::create([
                 'name' => $prefecture
-           ]);
+            ]);
         }
     }
 }

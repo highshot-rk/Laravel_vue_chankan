@@ -12,13 +12,10 @@
                     <div class="content__title">
                         <h1 class="h1" v-if="mode === 'undemolition-register'">未解体案件登録</h1>
                         <span class="en" v-if="mode === 'undemolition-register'">Undisassembled Register</span>
-
                         <h1 class="h1" v-if="mode === 'register'">新規架設登録</h1>
                         <span class="en" v-if="mode === 'register'">New Register</span>
-
-                        <h1 class="h1" v-if="mode === 'edit'">現場編集</h1>
+                        <h1 class="h1" v-if="mode === 'edit'">案件編集</h1>
                         <span class="en" v-if="mode === 'edit'">Project Edit</span>
-
                         <h1 class="h1" v-if="mode === 'advance_notice'">前日連絡</h1>
                         <span class="en" v-if="mode === 'advance_notice'">Advance Notice</span>
                     </div>
@@ -28,19 +25,34 @@
                     <div class="content__floar__inner">
                         <div class="content__box">
                             <div class="content__box__inner">
-                                <div class="content__input">
+                                <div class="content__input" v-if="mode !== 'advance_notice'">
                                     <div class="headline attention must">案件名</div>
                                     <div class="input__box">
                                         <input class="bgType" type="text" name="" v-model="project.name" required>
                                     </div>
                                 </div>
-                                <div class="content__input">
+                                <div class="content__input" v-if="mode !== 'advance_notice'">
                                     <div class="headline attention must">営業担当</div>
                                     <div class="input__wrap">
                                         <div class="input__box selectBox">
                                             <select class="bgType" name="" v-model="project.charge_id" required>
-                                                <template v-for="item in charges">
-                                                    <option :label="item.name" :value="item.id" :key="item.name">{{ item.name }}</option>
+                                                <template v-for="(charge, index) in charges">
+                                                    <!-- <option :label="item.name" :value="item.id" :key="item.name">{{ item.name }}</option> -->
+                                                    <option v-if="charge.edit_type == 0" :label="charge.name" :value="charge.id" :key="charge.id">{{ charge.name }}</option>
+                                                </template>
+                                                <option label="未定" :value="0">未定</option>
+                                            </select>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="content__input">
+                                    <div class="headline attention any">作業員</div>
+                                    <div class="input__wrap">
+                                        <div class="input__box selectBox">
+                                            <select class="bgType" name="" v-model="project.worker_id" required>
+                                                <option value="0">未定</option>
+                                                <template v-for="(charge, index) in charges">
+                                                    <option :label="charge.name" :value="charge.id" :key="charge.id">{{ charge.name }}</option>
                                                 </template>
                                             </select>
                                         </div>
@@ -59,25 +71,34 @@
                                     </div>
                                 </template>
                                 <div class="content__input">
-                                    <div class="headline attention must">施工予定日</div>
-
+                                    <div class="headline attention must">
+                                        <span v-if="mode !== 'advance_notice'">施工予定日</span>
+                                        <span v-else>到着予定時間</span>
+                                    </div>
                                     <template v-for="(item, index) in work_on_array">
-                                        <div class="input__wrap delete__wrap flex__wrap f__start v__center">
+                                        <div v-if="mode !== 'advance_notice'" class="input__wrap delete__wrap flex__wrap f__start v__center">
+                                            <!-- <div class="input__box year" v-if="!mode === 'advance_notice'"> -->
                                             <div class="input__box year">
-                                                <!-- <select name="" class="bgType" v-model="item.year" :ref="'yearSelect' + index"> -->
-                                                    <select
-                                                        name=""
-                                                        class="bgType"
-                                                        v-model="item.year"
-                                                        :ref="'yearSelect' + index"
-                                                        required>
-                                                    <template v-for="selectYear in selectYears">
+                                                <select
+                                                    name=""
+                                                    class="bgType"
+                                                    v-model="item.year"
+                                                    :ref="'yearSelect' + index"
+                                                    required>
+                                                    <!-- <template v-for="selectYear in selectYears">
                                                         <option :value="selectYear">{{ selectYear }}</option>
-                                                    </template>
+                                                    </template> -->
+                                                        <option
+                                                            v-for="(selectYear, index) in selectYears"
+                                                            :key="index"
+                                                            :value="selectYear"
+                                                        >
+                                                            {{ selectYear }}
+                                                        </option>
                                                 </select>年
                                             </div>
                                             <div class="input__box month">
-                                                <select name="" class="bgType" v-model="item.month" required>
+                                                <select class="bgType" v-model="item.month" required>
                                                     <option value="01">01</option>
                                                     <option value="02">02</option>
                                                     <option value="03">03</option>
@@ -93,7 +114,7 @@
                                                 </select>月
                                             </div>
                                             <div class="input__box day">
-                                                <select name="" class="bgType" v-model="item.day" required>
+                                                <select class="bgType" v-model="item.day" required>
                                                     <option value="01">01</option>
                                                     <option value="02">02</option>
                                                     <option value="03">03</option>
@@ -128,7 +149,7 @@
                                                 </select>日
                                             </div>
                                             <div class="input__box type">
-                                                <select name="" class="bgType" v-model="item.time_type" required>
+                                                <select class="bgType" v-model="item.time_type" required>
                                                     <option value="0">未定</option>
                                                     <option value="1">AM</option>
                                                     <option value="2">PM</option>
@@ -145,45 +166,45 @@
                                                 format="yyyy-MM-dd"
                                                 @selected="selected(index)"
                                                 :ref="'picker' + index"
-                                                v-model="pickedDate[index]">
-                                            </vuejs-datepicker>
+                                                v-model="pickedDate[index]"
+                                            />
                                             <p>{{ item.pickerval }}</p>
                                         </div>
-                                        <div class="input__wrap flex__wrap f__center v__center non__column" v-if="mode === 'advance_notice'">
+                                        <div
+                                            v-if="mode === 'advance_notice'"
+                                            class="input__wrap flex__wrap f__center v__center non__column"
+                                        >
                                             <div class="input__box" style="margin-right: 1em;">
                                                 <span>到着予定時間</span>
                                             </div>
                                             <div class="input__box twoInput">
-                                                <select class="bgType" v-model="item.scheduled_arrival_time_from">
-                                                    <template v-for="hour in hourArray">
+                                                <select class="bgType" v-model="item.scheduled_arrival_time_from" @change="changeTimeTo">
+                                                    <template v-for="hour in fromHourArray">
                                                         <template v-for="minute in minuteArray">
                                                             <option :value="`${hour}:${minute}`" >{{ hour }}:{{ minute }}</option>
                                                         </template>
                                                     </template>
-                                                    <!-- 30分ごとに、23:30まで -->
                                                 </select>
                                             </div>
                                             〜
                                             <div class="input__box twoInput">
                                                 <select class="bgType" v-model="item.scheduled_arrival_time_to">
-                                                    <template v-for="hour in hourArray">
+                                                    <template v-for="hour in toHourArray">
                                                         <template v-for="minute in minuteArray">
                                                             <option :value="`${hour}:${minute}`">{{ hour }}:{{ minute }}</option>
                                                         </template>
                                                     </template>
-                                                    <!-- 30分ごとに、23:30まで -->
                                                 </select>
                                             </div>
-
                                         </div>
                                     </template>
-                                    <div class="content__add flex__wrap f__center">
+                                    <div class="content__add flex__wrap f__center" v-if="mode !== 'advance_notice'">
                                         <button @click="addWorkOn">施工予定日を追加
                                             <span class="f__center"><img src="/assets/img/icon_add_white_bold.png"></span>
                                         </button>
                                     </div>
                                 </div>
-                                <div class="content__input">
+                                <div class="content__input" v-if="mode !== 'advance_notice'">
                                     <div class="headline attention any">案件お客様電話番号</div>
                                     <div class="input__wrap">
                                         <div class="input__box">
@@ -191,43 +212,61 @@
                                         </div>
                                     </div>
                                 </div>
-                                <div class="content__input">
+                                <div class="content__input" v-if="mode !== 'advance_notice'">
                                     <div class="headline attention any">郵便番号（※半角数字のみ入力可）</div>
                                     <div class="input__wrap flex__wrap f__start v__center">
                                         <div class="input__box post__one">
-                                            <input class="bgType" type="text" name="" placeholder="000" v-model="zip_first">
+                                            <input class="bgType" type="text" placeholder="000" v-model="zip_first">
                                         </div>
                                         -
                                         <div class="input__box post__two">
-                                            <input class="bgType" type="text" name="" placeholder="0000" v-model="zip_second">
+                                            <input class="bgType" type="text" placeholder="0000" v-model="zip_second">
                                         </div>
                                     </div>
                                 </div>
-                                <div class="content__input">
+                                <div class="content__input" v-if="mode !== 'advance_notice'">
                                     <div class="headline attention must">住所</div>
                                     <div class="input__wrap">
                                         <div class="input__box">
-                                            <input class="bgType" type="text" name="" v-model="project.address">
+                                            <input class="bgType" type="text" v-model="project.address">
                                         </div>
                                     </div>
                                 </div>
-                                <div class="content__input">
+                                <div class="content__input" v-if="mode !== 'advance_notice'">
                                     <div class="headline attention must">道路規制</div>
                                     <div class="input__wrap flex__wrap v__center">
                                         <div class="input__box tabButton">
-                                            <input class="bgType" type="radio" name="" value="0" v-model="project.road" required>
+                                            <input class="bgType" type="radio" value="0" v-model="project.road" required>
                                             <label>特になし</label>
                                         </div>
                                         <div class="input__box tabButton">
-                                            <input class="bgType" type="radio" name="" value="1" v-model="project.road">
+                                            <input class="bgType" type="radio" value="1" v-model="project.road">
                                             <label>ショート現地</label>
                                         </div>
                                     </div>
                                 </div>
-                                <div class="content__input">
+                                <div class="content__input" v-if="mode !== 'advance_notice'">
                                     <div class="headline attention any">備考</div>
                                     <div class="input__box">
-                                        <textarea class="bgType" name="" placeholder="南面が狭小の為、近隣に注意して作業してください。" v-model="project.remark"></textarea>
+                                        <textarea class="bgType" placeholder="南面が狭小の為、近隣に注意して作業してください。" v-model="project.remark"></textarea>
+                                    </div>
+                                </div>
+                                <div class="content__input" v-if="mode !== 'advance_notice'">
+                                    <div class="headline attention any">色</div>
+                                    <div class="input__box">
+                                        <!-- <textarea class="bgType" placeholder="南面が狭小の為、近隣に注意して作業してください。" v-model="project.remark"></textarea> -->
+                                        <ul class="flex__wrap selectColor">
+                                            <li class="colorBox one"><input type="radio" ref="color1" v-model="project.process_color_id" value="1" name="colorGroup" @click="radioDeselection(1)"><label></label></li>
+                                            <li class="colorBox two"><input type="radio" ref="color2" v-model="project.process_color_id" value="2" name="colorGroup" @click="radioDeselection(2)"><label></label></li>
+                                            <li class="colorBox three"><input type="radio" ref="color3" v-model="project.process_color_id" value="3" name="colorGroup" @click="radioDeselection(3)"><label></label></li>
+                                            <li class="colorBox four"><input type="radio" ref="color4" v-model="project.process_color_id" value="4" name="colorGroup" @click="radioDeselection(4)"><label></label></li>
+                                            <li class="colorBox five"><input type="radio" ref="color5" v-model="project.process_color_id" value="5" name="colorGroup" @click="radioDeselection(5)"><label></label></li>
+                                            <li class="colorBox six"><input type="radio" ref="color6" v-model="project.process_color_id" value="6" name="colorGroup" @click="radioDeselection(6)"><label></label></li>
+                                            <li class="colorBox seven"><input type="radio" ref="color7" v-model="project.process_color_id" value="7" name="colorGroup" @click="radioDeselection(7)"><label></label></li>
+                                            <li class="colorBox eight"><input type="radio" ref="color8" v-model="project.process_color_id" value="8" name="colorGroup" @click="radioDeselection(8)"><label></label></li>
+                                            <li class="colorBox nine"><input type="radio" ref="color9" v-model="project.process_color_id" value="9" name="colorGroup" @click="radioDeselection(9)"><label></label></li>
+                                            <li class="colorBox ten"><input type="radio" ref="color10" v-model="project.process_color_id" value="10" name="colorGroup" @click="radioDeselection(10)"><label></label></li>
+                                        </ul>
                                     </div>
                                 </div>
                             </div>
@@ -235,7 +274,7 @@
                     </div>
                 </div>
             </div>
-            <div class="content__section">
+            <div class="content__wrap detail__construction" v-if="mode !== 'advance_notice'">
                 <div class="content__header">
                     <div class="content__title">
                         <h1 class="h1">元請け情報登録</h1>
@@ -250,14 +289,20 @@
                                     <div class="headline attention must">登録済み情報から探す</div>
                                     <div class="input__wrap">
                                         <div class="input__box selectBox" :class='{nonInput : is_new_project_orderer}' :disabled="is_new_project_orderer" :required="!is_new_project_orderer">
-                                            <select class="bgType" name="" v-model="project_orderer_id">
-                                                <template v-for="item in project_orderers">
+                                            <select class="bgType" v-model="project_orderer_id">
+                                                <!-- <template v-for="item in project_orderers">
                                                     <option :value="item.id">{{ item.company }}</option>
-                                                </template>
+                                                </template> -->
+                                                <option
+                                                    v-for="(item, index) in project_orderers"
+                                                    :key="index"
+                                                    :value="item.id"
+                                                >
+                                                    {{ item.company }}
+                                                </option>
                                             </select>
                                         </div>
                                     </div>
-
                                     <div class="content__add flex__wrap f__center">
                                         <button @click="is_new_project_orderer = !is_new_project_orderer">
                                             新規の元請け情報を登録
@@ -268,19 +313,19 @@
                                         <div class="content__input">
                                             <div class="headline attention must">会社名</div>
                                             <div class="input__box">
-                                                <input class="bgType" type="" name="" v-model="project_orderer.company" :required="is_new_project_orderer">
+                                                <input class="bgType" type="text" v-model="project_orderer.company" :required="is_new_project_orderer">
                                             </div>
                                         </div>
                                         <div class="content__input" v-if="!is_tel">
                                             <div class="headline attention must">電話番号</div>
                                             <div class="advice">（電話番号を登録すると、作業報告通知が自動で行われます。）</div>
                                             <div class="input__box">
-                                                <input class="bgType" type="" name="" v-model="project_orderer.phone" :required="!is_new_project_orderer">
+                                                <input class="bgType" type="tel" v-model="project_orderer.phone" :required="!is_new_project_orderer">
                                             </div>
                                         </div>
                                         <div class="content__confirmation">
                                             <label class="checkbox__label">電話番号は後ほど登録する
-                                                <input type="checkbox" name="" v-model="is_register_phone_later" @click="is_tel = !is_tel">
+                                                <input type="checkbox" v-model="is_register_phone_later" @click="is_tel = !is_tel">
                                                 <div class="checkbox__block"></div>
                                             </label>
                                         </div>
@@ -293,10 +338,10 @@
             </div>
             <div class="content__submit f__center">
                 <div class="submit__box">
-                    <button type="button" name="" @click="registerProject" v-if="mode === 'register'">案件登録</button>
-                    <button type="button" name="" @click="registerUndemolitionProject" v-if="mode === 'undemolition-register'">案件登録</button>
-                    <button type="button" name="" @click="confirmUpdate" v-if="mode === 'edit'">案件編集</button>
-                    <button type="button" name="" @click="confirmAdvanceNotice" v-if="mode === 'advance_notice'">前日連絡</button>
+                    <button type="button" @click.prevent="registerProject" v-if="mode === 'register'">案件登録</button>
+                    <button type="button" @click.prevent="registerUndemolitionProject" v-if="mode === 'undemolition-register'">案件登録</button>
+                    <button type="button" @click.prevent="confirmUpdate" v-if="mode === 'edit'">案件を更新</button>
+                    <button type="button" @click.prevent="confirmAdvanceNotice" v-if="mode === 'advance_notice'">前日連絡</button>
                 </div>
             </div>
         </div>
@@ -321,8 +366,11 @@
             id: {
                 type: Number
             },
+            login_id: {
+                type: String
+            },
             user_id: {
-                type: Number
+                type: String
             },
             work_on_y: {
                 type: String
@@ -351,6 +399,7 @@
                 PROJECT_TYPE_DISASSEMBLED: 2,
                 project: {
                     name: '',
+                    worker_id: '',
                     charge_id: '',
                     work_on_date: [],
                     tel: '',
@@ -359,6 +408,7 @@
                     road: 0,
                     remark: '',
                     is_send_to_charge: 0,
+                    process_color_id: '',
                 },
                 charges: [],
                 project_orderers: [],
@@ -389,7 +439,9 @@
                 ja:ja,
                 pickedDate: [],
                 minuteArray: ['00', '30'],
-                hourArray: ['00', '01', '02', '03', '04', '05', '06', '07', '08', '09', '10', '11', '12', '13', '14', '15', '16', '17', '18', '19', '20', '21', '22', '23']
+                fromHourArray: ['00', '01', '02', '03', '04', '05', '06', '07', '08', '09', '10', '11', '12', '13', '14', '15', '16', '17', '18', '19', '20', '21', '22', '23'],
+                toHourArray: ['00', '01', '02', '03', '04', '05', '06', '07', '08', '09', '10', '11', '12', '13', '14', '15', '16', '17', '18', '19', '20', '21', '22', '23'],
+                checkRadio: '',
             }
         },
         components: {
@@ -401,10 +453,21 @@
             // 編集画面or前日連絡画面or未解体案件登録画面である場合、案件詳細取得APIを呼び出す
             if ((this.mode === "edit") || (this.mode === "advance_notice") || (this.mode === "undemolition-register")) {
                 // 案件情報を取得
-                axios.get('/api/projects/'+this.id, {})
+                axios.get('/api/projects/' + this.id, {})
                     .then(result => {
                         this.project.name = result.data.name
-                        this.project.charge_id = result.data.charge.id
+                        if (result.data.charge) {
+                            this.project.charge_id = result.data.charge.id
+                        } else {
+                            this.project.charge_id = 0
+                        }
+                        console.log(result.data)
+                        if(result.data.worker !== null) {
+                            // this.project.worker_id = result.data.worker.id
+                            this.project.worker_id = result.data.worker
+                        } else {
+                            this.project.worker_id = 0
+                        }
                         this.project.tel     = result.data.tel
                         if (!result.data.zip) {
                             this.zip_first = ''
@@ -422,7 +485,8 @@
                         this.project_orderer_id      = result.data.project_orderer.id
                         this.project.is_send_to_user = result.data.is_send_to_user
                         this.project.is_send_to_charge = result.data.is_send_to_charge
-                        this.project.enable_sms      = result.data.user.enable_sms
+                        this.project.process_color_id = result.data.process_color_id ?? ''
+
                         if ((this.mode === "edit") || (this.mode === "advance_notice")) {
                             this.work_on_array = []
                             result.data.label.projects.forEach(item => {
@@ -435,8 +499,8 @@
                                             month:                       dateDataSplit[1],
                                             day:                         dateDataSplit[2],
                                             time_type:                   item.time_type,
-                                            scheduled_arrival_time_from: item.scheduled_arrival_time_from,
-                                            scheduled_arrival_time_to:   item.scheduled_arrival_time_to,
+                                            scheduled_arrival_time_from: item.scheduled_arrival_time_from ?? '08:00',
+                                            scheduled_arrival_time_to:   item.scheduled_arrival_time_to ?? '08:30',
                                         }
                                         this.work_on_array.push(dateData)
                                     }
@@ -449,8 +513,8 @@
                                             month:                       dateDataSplit[1],
                                             day:                         dateDataSplit[2],
                                             time_type:                   item.time_type,
-                                            scheduled_arrival_time_from: item.scheduled_arrival_time_from,
-                                            scheduled_arrival_time_to:   item.scheduled_arrival_time_to,
+                                            scheduled_arrival_time_from: item.scheduled_arrival_time_from ?? '08:00',
+                                            scheduled_arrival_time_to:   item.scheduled_arrival_time_to ?? '08:30',
                                         }
                                         this.work_on_array.push(dateData)
                                     }
@@ -463,7 +527,7 @@
                     })
             } else {
                 // 会員情報を取得
-                axios.get('/api/users/'+this.user_id, {})
+                axios.get('/api/users/' + this.user_id, {})
                     .then(result => {
                         this.project.enable_sms = result.data.enable_sms
                     })
@@ -484,7 +548,13 @@
                 .then(result => {
                     this.charges = result.data
                     if ((this.mode === "register") && (this.charges.length > 0)) {
-                        this.project.charge_id = this.charges[0].id
+                        if(this.isCharge == 1) {
+                            this.project.charge_id = this.login_id
+                            this.project.worker_id = 0
+                        } else if(this.isCharge !== 1) {
+                            this.project.charge_id = this.charges[0]['id']
+                            this.project.worker_id = 0
+                        }
                     }
                 })
                 .catch(result => {
@@ -504,7 +574,6 @@
         },
         computed: {
             // 必要に応じてメソッドを定義
-
             // 年の選択肢を取得
             selectYears: function() {
                 let year = (new Date()).getFullYear()
@@ -514,10 +583,19 @@
                     year++
                 }
                 return years
-            }
-
+            },
         },
         methods: {
+            radioDeselection: function(e) {
+                // console.log(this.$refs['color' + e].checked);
+                if(this.checkRadio == this.$refs['color' + e]) {
+                    this.$refs['color' + e].checked = false
+                    this.checkRadio = ''
+                    this.project.process_color_id = ''
+                } else {
+                    this.checkRadio = this.$refs['color' + e];
+                }
+            },
             // 必要に応じて、ボタン押下時などに呼び出すLaravelのAPIを呼び出すメソッドを定義
             // 案件を登録する
             registerProject: function() {
@@ -613,12 +691,12 @@
             // 施工予定日の欄を追加する
             addWorkOn: function() {
                 this.work_on_array.push({
-                        id: '',
-                        year: '',
-                        month: '',
-                        day: '',
-                        time_type: 1,
-                    })
+                    id: '',
+                    year: '',
+                    month: '',
+                    day: '',
+                    time_type: 1,
+                })
             },
             // 施工予定日の欄を削除する※(日付欄が1つのみの場合、削除しない)
             deleteWorkOn: function(index) {
@@ -633,7 +711,7 @@
             executeMethod: function() {
                 if (this.confirmMode === 'update') {
                     this.updateProject()
-                } else if (this.confirmMode === 'advance_notice'){
+                } else if (this.confirmMode === 'advance_notice') {
                     if (this.validateAdvanceNotice()) {
                         this.advanceNotice()
                     }
@@ -667,7 +745,40 @@
                     }
                 })
                 return result
-            }
+            },
+            /* 前日連絡 */
+            // 施工予定日の終了時間の自動設定
+            changeTimeTo: function() {
+                // 到着時間の締め日
+                this.work_on_array[0].scheduled_arrival_time_to
+                // 時間を取得
+                const hour = Number(this.work_on_array[0].scheduled_arrival_time_from.slice( 0, 2 ))
+                // 分を取得
+                const minute = Number(this.work_on_array[0].scheduled_arrival_time_from.slice( -2 ))
+                let arraival_hour = ''
+                let arraival_minute = ''
+                // 到着時間によって到着時間予想の条件分岐
+                if(minute === 30) {
+                    arraival_minute = '00'
+                    arraival_hour = hour + 1
+                } else {
+                    arraival_minute = '30'
+                    arraival_hour = hour
+                }
+                // 到着時間が1桁だった場合、0をかしらにつける
+                if(String(arraival_hour).length == 1) {
+                    arraival_hour = '0' + arraival_hour
+                }
+
+                // 到着時間の始まりから、後を押せなくする
+                // this.toHourArray = []
+                // for(let i = Number(arraival_hour); i < 25; i += 1) {
+                //     this.toHourArray.push(i)
+                // }
+                // 到着時間を出力
+                const arraival_time = arraival_hour + ':' + arraival_minute
+                this.work_on_array[0].scheduled_arrival_time_to = arraival_hour + ':' + arraival_minute
+            },
         },
         watch: {
             // 必要に応じてメソッドを定義

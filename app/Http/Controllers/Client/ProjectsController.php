@@ -20,7 +20,20 @@ class ProjectsController extends Controller
     public function show($id, Request $request)
     {
         $isOpen = $request->is_open ? $request->is_open : 'blank';
-        return view('progress.index', compact('id', 'isOpen'));
+        // 案件のステータス取得
+        $projectInstance = new Project;
+        $project = $projectInstance->where('id', $id)->first();
+
+        // レポート確認
+        $isFinishedReported = false;
+        if (isset($request->is_finish_reported)) {
+            $isFinishedReported = true;
+        }
+        if($project['is_finished'] === 0) {
+            return view('progress.index', compact('id', 'isOpen'));
+        } elseif($project['is_finished'] === 1) {
+            return view('progress.none', compact('id', 'project', 'isFinishedReported'));
+        }
     }
 
     /**

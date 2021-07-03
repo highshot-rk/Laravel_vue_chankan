@@ -21,7 +21,7 @@ class CreateProjectsTable extends Migration
             $table->integer('project_orderer_id')->unsigned();
             // $table->foreign('project_orderer_id')->references('id')->on('project_orderers');
             $table->string('name');
-            $table->string('charge_id');
+            $table->integer('charge_id')->unsigned();
             $table->date('work_on')->nullable();
             $table->string('zip', 8)->nullable();
             $table->string('address');

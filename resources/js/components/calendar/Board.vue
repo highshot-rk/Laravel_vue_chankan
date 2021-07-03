@@ -1,11 +1,12 @@
 <template>
 	<div class="proccess">
-		<Modal />
+		<Modal :login-id="loginId" :is-charge="isCharge" />
 		<header id="proccess-header">
 			<div class="proccess-header-inner flex__wrap">
 				<div class="proccess__back">
 					<!-- <a onclick="javascript:window.history.back(-1);return false;">前の画面へ戻る</a> -->
-					<a href="/calendar">カレンダー画面へ戻る</a>
+					<a v-if="isCharge == 1" href="/charge/calendar">カレンダー画面へ戻る</a>
+					<a v-else href="/calendar">カレンダー画面へ戻る</a>
 				</div>
 
 				<div class="proccess__calendar proccess__button">
@@ -16,34 +17,48 @@
 					</ul>
 				</div>
 				<div class="proccess__print proccess__button">
-					<a @click.prevent="openPdfModal">印刷する</a>
+					<ul class="flex__wrap">
+                        <li style="margin-right: 5px;">
+                            <a v-if="isCharge != 1" href="/charges/add">担当者追加</a>
+                        </li>
+                        <!-- <li><a @click.prevent="openPdfModal">印刷する</a></li> -->
+                    </ul>
 				</div>
 			</div>
 		</header>
-		<main>
+		<main class="proccess__main">
 			<div class="proccess__wrap">
 				<div class="proccess__wrap__inner">
 					<div class="process-table">
+                        <!-- <div class="sub-block"></div>
+                        <div class="sub-timeblock">AM / PM</div> -->
 						<TableHead />
-                        <TableBody v-if="reset_flg" />
+                        <TableBody v-if="reset_flg" :is-charge="isCharge" />
 					</div>
 				</div>
 			</div>
 		</main>
+        <loading :active.sync="tableHeaderEnable"
+            :can-cancel="false"
+            color="#6495ed"
+            :width="36"
+            :height="36"
+            :is-full-page="true">
+        </loading>
 	</div>
 </template>
 <script>
-	import Vue from 'vue'
-	import Vuex from 'vuex'
-	import Modal from './ProcessModal'
-	import TableHead from './TableHead'
-	import TableBody from './TableBody'
-	import Datepicker from 'vuejs-datepicker';
-	import {ja} from 'vuejs-datepicker/dist/locale'
-	import dayjs from 'dayjs';
-	import 'dayjs/locale/ja';
-	dayjs.locale('ja');
-	Vue.use(Vuex)
+    import Vue from 'vue'
+    import Vuex from 'vuex'
+    import Modal from './ProcessModal'
+    import TableHead from './TableHead'
+    import TableBody from './TableBody'
+    import Datepicker from 'vuejs-datepicker';
+    import {ja} from 'vuejs-datepicker/dist/locale'
+    import dayjs from 'dayjs';
+    import 'dayjs/locale/ja';
+    dayjs.locale('ja');
+    Vue.use(Vuex)
 
 
 	export default {
@@ -54,6 +69,9 @@
 			Datepicker
 		},
         props: {
+            loginId: {
+                type: String
+            },
             isCharge: {
                 type: String
             },
@@ -155,7 +173,27 @@
                 get() { return this.$store.state.calendars },
                 set(val) { this.$store.commit('setCalendars') }
             },
+            tableHeaderEnable: function() {
+                return !this.$store.getters.getTableHeaderEnable
+            }
 		}
 	}
 </script>
+<style>
+.is-full-page {
+    height: 100%;
+    position: fixed;
+    top: 0;
+    width: 100%;
+    left: 0;
+    margin: auto;
+    background: rgba(0,0,0,0.3);
+    z-index: 100000;
+}
+.vld-icon {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+}
+</style>
 

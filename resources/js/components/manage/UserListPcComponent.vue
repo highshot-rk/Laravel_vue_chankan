@@ -33,7 +33,7 @@
         <thead>
             <tr>
                 <th>会社名</th>
-                <th>契約者</th>
+                <!-- <th>契約者</th> -->
                 <th>名前</th>
                 <th>メールアドレス<br>携帯電話</th>
                 <th>都道府県</th>
@@ -41,16 +41,19 @@
         </thead>
         <tbody>
             <template v-for="user in users">
-                <tr>
+                <tr :key="user.id">
                     <td><span class="title"><a :href="url_show(user.id)">{{ user.company }}</a></span></td>
-                    <td><span class="name">{{ user.manager.name}}</span></td>
+                    <td><span class="name">{{ user.manager ? user.manager.name : "" }}</span></td>
+                    <!-- <td><span v-if="user.manager.name !== null" class="name">{{ user.manager.name }}</span></td> -->
+                    <!--
                     <td>
                         <template v-for="charge in user.charges">
                             <span class="name">{{ charge.name }}</span><br>
                         </template>
                     </td>
+                    -->
                     <td><span class="email">{{ user.email }}</span><br>{{ user.phone }}</td>
-                    <td><span class="address">{{ user.prefecture.name }}</span></td>
+                    <td><span class="address">{{ user.prefecture ? user.prefecture.name : "" }}</span></td>
                 </tr>
             </template>
         </tbody>
@@ -92,6 +95,7 @@ export default {
             // Ajax通信
             axios.get('/api/users', params)
             .then(result => {
+                console.log(result)
                 // 取得成功時：一覧へ反映
                 this.users = []
                 this.users = result.data

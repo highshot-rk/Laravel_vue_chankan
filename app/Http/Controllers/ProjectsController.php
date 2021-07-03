@@ -6,6 +6,7 @@ use App\Project;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
 use App\Services\AuthService;
+use Illuminate\Support\Facades\Auth;
 
 /**
  * (ユーザー向け)案件情報の画面のController
@@ -19,7 +20,9 @@ class ProjectsController extends Controller
      */
     public function add(Request $request)
     {
+        // ユーザーIDを取得する
         $user_id = AuthService::getAuthUser()->id;
+        $login_id = Auth::id();
         $work_on_y = $request->y;
         $work_on_m = $request->m;
         $work_on_d = $request->d;
@@ -27,7 +30,8 @@ class ProjectsController extends Controller
             'user_id',
             'work_on_y',
             'work_on_m',
-            'work_on_d'
+            'work_on_d',
+            'login_id',
         ));
     }
 

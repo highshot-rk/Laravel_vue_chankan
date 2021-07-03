@@ -12,6 +12,15 @@ class LoginController extends Controller
 
     protected $redirectTo = '/charge/calendar';
 
+
+    /**
+     * ログインIDを電話番号に変更
+     *
+     * @return void
+     */
+    public function username() {
+        return 'phone';
+    }
     /**
      * Create a new controller instance.
      *
@@ -36,7 +45,7 @@ class LoginController extends Controller
     // ログイン画面
     public function showLoginForm()
     {
-        return view('charge.auth.login');
+        return view('charges.auth.login');
     }
 
     protected function guard()

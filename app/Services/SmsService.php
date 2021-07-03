@@ -26,19 +26,106 @@ class SmsService
      * @param string message
      * @return void
      */
-    static public function sendToProjectOrdererAndCharge($project_id, $type, $message)
+    static public function sendToProjectOrdererAndCharge($project_id, $type)
     {
         // 案件情報、送信先の情報を取得
         $project        = Project::find($project_id);
         $user           = User::find($project->user_id);
         $charge         = Charge::find($project->charge_id);
         $projectOrderer = ProjectOrderer::find($project->project_orderer_id);
+
         // 担当者へ送信
         if ($project->is_send_to_charge) {
+            $message =
+$charge->name.' 様
+
+作業開始のご連絡をさせていただきます。
+
+案件名：'.$project->name.'
+作業開始時刻：'.$project->started_at->format('H:i').'
+
+【オススメ足場業者】
+'.route('sponsor.index').'
+
+'.$user->company;
             SendSms::dispatch($charge->phone, $message)->delay(now()->addSeconds(self::SECOND_SEND_DELAY));
         }
+
         // 元請けへ送信
         if (!blank($projectOrderer->phone)) {
+            $message =
+$project->projectOrderer->company.' 様
+
+作業開始のご連絡をさせていただきます。
+
+案件名：'.$project->name.'
+作業開始時刻：'.$project->started_at->format('H:i').'
+
+【オススメ足場業者】
+'.route('sponsor.index').'
+
+'.$user->company;
+            SendSms::dispatch($projectOrderer->phone, $message)->delay(now()->addSeconds(self::THIRD_SEND_DELAY));
+        }
+        // 送信情報を登録
+        Sms::create([
+            'user_id'           => $user->id,
+            'charge_id'         => $project->charge_id,
+            'type'              => $type,
+            'is_sent_to_user'   => 0,
+            'is_sent_to_charge' => $project->is_send_to_charge,
+        ]);
+    }
+
+    /**
+     * 案件に紐づく元請け＆担当者へショートメッセージ送信（完了）
+     *
+     * @param integer project_id
+     * @param integer type
+     * @param string message
+     * @return void
+     */
+    static public function sendFinToProjectOrdererAndCharge($project_id, $type)
+    {
+        // 案件情報、送信先の情報を取得
+        $project        = Project::find($project_id);
+        $user           = User::find($project->user_id);
+        $charge         = Charge::find($project->charge_id);
+        $projectOrderer = ProjectOrderer::find($project->project_orderer_id);
+
+        // 担当者へ送信
+        if ($project->is_send_to_charge) {
+            $message =
+$charge->name.' 様
+
+作業終了のご連絡をさせていただきます。
+
+案件名：'.$project->name.'
+作業終了時刻：'.$project->finished_at->format('H:i').'
+作業終了内容：'.route('progress.fin', $project->id).'
+
+【オススメ足場業者】
+'.route('sponsor.index').'
+
+'.$user->company;
+            SendSms::dispatch($charge->phone, $message)->delay(now()->addSeconds(self::SECOND_SEND_DELAY));
+        }
+
+        // 元請けへ送信
+        if (!blank($projectOrderer->phone)) {
+            $message =
+$project->projectOrderer->company.' 様
+
+作業終了のご連絡をさせていただきます。
+
+案件名：'.$project->name.'
+作業終了時刻：'.$project->finished_at->format('H:i').'
+作業終了内容：'.route('progress.fin', $project->id).'
+
+【オススメ足場業者】
+'.route('sponsor.index').'
+
+'.$user->company;
             SendSms::dispatch($projectOrderer->phone, $message)->delay(now()->addSeconds(self::THIRD_SEND_DELAY));
         }
         // 送信情報を登録
@@ -81,6 +168,34 @@ class SmsService
     }
 
     /**
+     *
+     * 担当者へログイン情報をショートメッセージ送信
+     *
+     * @param integer project_id
+     * @param integer type
+     * @param string message
+     * @return void
+     *
+     */
+    static public function sendToCharge($charge_id, $type, $message)
+    {
+        // 対象の担当者情報を取得する
+        $charge = Charge::find($charge_id);
+
+        // 担当者へSMS送信
+        SendSms::dispatch($charge->phone, $message);
+
+        // 送信情報を登録
+        Sms::create([
+            'user_id'           => $charge->user_id,
+            'charge_id'         => $charge->id,
+            'type'              => $type,
+            'is_sent_to_user'   => 0,
+            'is_sent_to_charge' => 1,
+        ]);
+    }
+
+    /**
      * 案件に紐づくユーザー＆元請けへショートメッセージ送信
      * MEMO: 未使用となる
      *
@@ -100,11 +215,12 @@ class SmsService
         if ($project->is_send_to_user) {
             // self::send($user->phone, $message);
             SendSms::dispatch($user->phone, $message);
-
         }
+
         // 担当者へ送信
         // self::send($charge->phone, $message);
         SendSms::dispatch($charge->phone, $message)->delay(now()->addSeconds(self::SECOND_SEND_DELAY));
+
         // 元請けへ送信
         if (!blank($projectOrderer->phone)) {
             // self::send($projectOrderer->phone, $message);

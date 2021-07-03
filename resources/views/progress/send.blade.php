@@ -15,7 +15,7 @@
                 @auth('charge')
 				@include("../components/header")
                 @endauth
-                    <client-project-report-component id="{{ $id }}"></client-project-report-component>
+                    <client-project-report-component id="{{ $id }}" />
             </div>
 		</div>
 	</div>

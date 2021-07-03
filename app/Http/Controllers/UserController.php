@@ -12,6 +12,7 @@ use Illuminate\Support\Facades\Mail;
 use App\Mail\EmailCompleteForUser;
 use App\Mail\EmailCompleteForCharge;
 use App\Http\Requests\UserEditRequest;
+use App\Http\Requests\UserStoreRequest;
 use App\Http\Requests\UserPasswordRequest;
 use App\Http\Requests\UserMainRegisterRequest;
 use Illuminate\Foundation\Auth\RegistersUsers;
@@ -75,15 +76,15 @@ class UserController extends Controller
                 $params  = $request->all();
                 unset($params['charge']);
                 $user->fill($params);
-                foreach ($charges as $charge) {
-                    $userCharge = Charge::find($charge['id']);
-                    $userCharge->fill($charge)->save();
-                }
+                // foreach ($charges as $charge) {
+                //     $userCharge = Charge::find($charge['id']);
+                //     $userCharge->fill($charge)->save();
+                // }
                 $user->save();
                 // 会員でログインしている場合、担当者の情報も更新する
                 $charge = Charge::where('user_id', $user->id)->first();
                 $charge->name = $user->name;
-                $charge->email = $user->email;
+                // $charge->email = $user->email;
                 $charge->phone = $user->phone;
                 $charge->save();
             });
@@ -122,7 +123,8 @@ class UserController extends Controller
      *
      * @return void
      */
-    public function editPassword() {
+    public function editPassword()
+    {
         return view('user.editPassword');
     }
 
@@ -131,17 +133,18 @@ class UserController extends Controller
      *
      * @return void
      */
-    public function register($token) {
+    public function register($token)
+    {
         // トークン認証を行う
         $user        = User::withoutGlobalScope('email_verified_at')->where('email_token', $token)->firstOrFail();
         $prefectures = Prefecture::all();
         $email       = $user->email;
-        $time1 = Carbon::now();
-        $time2 = new Carbon($user->created_at);
-        /* 登録日時から1時間経過している場合：
+        $time1       = Carbon::now();
+        $time2       = new Carbon($user->created_at);
+        /* 登録日時から1時間経過している場合
         ・DBよりユーザー情報＆担当者情報を削除する
         ・リダイレクトする */
-        if ($time1->gt($time2->addHour())) {
+        if ($time1->gt($time2->addHour(8))) {
             \DB::transaction(function () use ($user) {
                 $user->charges()->forceDelete();
                 $user->forceDelete();
@@ -174,27 +177,24 @@ class UserController extends Controller
             $charge->is_parent        = true;
             $charge->name             = $user->name;
             $charge->phone            = $user->phone;
-            $charge->email            = $user->email;
             $charge->edit_type        = config('const.charge.edit_type.edit');
-            $charge->contract_price   = 0;
             $charge->save();
 
-            if ($chargesValue != Null) {
-                foreach ($chargesValue as $chargeValue) {
-                    $charge = Charge::find($chargeValue['id']);
-                    $charge->fill($chargeValue);
-                    $charge->password = \Hash::make($chargeValue['password']);
-                    $charge->save();
-                    // 担当者のメールアドレスへメール送信
-                    $email = new EmailCompleteForCharge($charge, $chargeValue['password']);
-                    Mail::to($charge->email)->send($email);
-                }
-            }
+            // if ($chargesValue != Null) {
+            //     foreach ($chargesValue as $chargeValue) {
+            //         $charge = Charge::find($chargeValue['id']);
+            //         $charge->fill($chargeValue);
+            //         $charge->password = \Hash::make($chargeValue['password']);
+            //         $charge->save();
+            //         // 担当者のメールアドレスへメール送信
+            //         $email = new EmailCompleteForCharge($charge, $chargeValue['password']);
+            //         Mail::to($charge->email)->send($email);
+            //     }
+            // }
             // ユーザーのメールアドレスへメール送信
             $email = new EmailCompleteForUser($user, $request->password);
             Mail::to($user->email)->send($email);
         });
-
 
         $this->guard()->login($user);
         return redirect()->route('calendar');

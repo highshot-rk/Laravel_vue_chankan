@@ -18,7 +18,7 @@ class UsersTableSeeder extends Seeder
      */
     public function run()
     {
-        for ($i = 1; $i < 10; $i++) {
+        for ($i = 1; $i < 5; $i++) {
             User::create([
                 'name'              => '山田太郎'.$i,
                 'email'             => 'test'.$i.'@test.com',
@@ -28,8 +28,20 @@ class UsersTableSeeder extends Seeder
                 'company'           => 'テスト株式会社',
                 'prefecture_id'     => 1,
                 'manager_id'        => ($i % 2) + 1,
-                'limit_login'       => 10,
+                // 'limit_login'       => 10,
             ]);
         }
+        // User::create([
+        //     'name'              => '師岡　博貴',
+        //     'email'             => '56@zotman.jp',
+        //     'email_verified_at' => Carbon::now(),
+        //     'password'          => Hash::make('123456'),
+        //     'phone'             => '08056785115',
+        //     'company'           => '株式会社MOROOKA',
+        //     'prefecture_id'     => 11,
+        //     'manager_id'        => 1,
+        //     'enable_sms'        => 1,
+        //     // 'limit_login'       => 10,
+        // ]);
     }
 }

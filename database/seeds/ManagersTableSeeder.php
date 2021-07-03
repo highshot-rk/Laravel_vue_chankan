@@ -15,13 +15,21 @@ class ManagersTableSeeder extends Seeder
      */
     public function run()
     {
-        Manager::create([
-            'name' => 'ZOTMAN運営',
-            'email' => 'xet2b343ud8vf0wd9gnu@cattobi.com',
-            'is_active' => true,
-            'password' => bcrypt('password'),
-            'owner' => 1,
-            'reward_rate' => 0.10,
-        ]);
+				Manager::create([
+						'name' => 'サンプル',
+						'email' => 'xet2b343ud8vf0wd9gnu@cattobi.com',
+						'is_active' => true,
+						'password' => bcrypt('password'),
+						'owner' => 1,
+						'reward_rate' => 0.10,
+				]);
+				Manager::create([
+						'name' => 'ZOTMAN運営',
+						'email' => '56@zotman.jp',
+						'is_active' => true,
+						'password' => bcrypt('zotman0550'),
+						'owner' => 1,
+						'reward_rate' => 0.10,
+				]);
     }
 }

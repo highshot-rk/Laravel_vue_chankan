@@ -1,104 +1,103 @@
 <template>
-			<div class="allWrapper">
-                <modal ref="modal" @parentMethod="executeMethod">
-                    <template v-slot:message>{{ message }}</template>
-                    <template v-slot:ok>OK</template>
-                    <template v-slot:cancel>戻る</template>
-                </modal>
+    <div class="allWrapper">
+        <modal ref="modal" @parentMethod="executeMethod">
+            <template v-slot:message>{{ message }}</template>
+            <template v-slot:ok>OK</template>
+            <template v-slot:cancel>戻る</template>
+        </modal>
 
-				<div class="content__wrap">
-					<div class="content__section">
+        <div class="content__wrap">
+            <div class="content__section">
+                <div class="content__header">
+                    <div class="content__title">
+                        <h1 class="h1">元請け情報詳細</h1>
+                        <span class="en">Prime Contractor Details</span>
+                    </div>
+                    <div class="content__edit">
+                        <ul class="flex__wrap f__start">
+                            <li><a :href="url_edit">編集</a></li>
+                            <li><a @click.prevent="confirm">削除</a></li>
+                        </ul>
+                    </div>
+                </div>
 
-						<div class="content__header">
-							<div class="content__title">
-								<h1 class="h1">元請け情報詳細</h1>
-								<span class="en">Prime Contractor Details</span>
-							</div>
-							<div class="content__edit">
-								<ul class="flex__wrap f__start">
-									<li><a :href="url_edit">編集</a></li>
-									<li><a @click.prevent="confirm">削除</a></li>
-								</ul>
-							</div>
-						</div>
-
-						<div class="content__floar">
-							<div class="content__floar__inner">
-								<div class="content__box">
-									<div class="content__box__inner">
-										<div class="content__input">
-											<div class="headline">携帯電話</div>
-											<div class="input__text">
-												<span>{{ projectOrderer.phone }}</span>
-											</div>
-										</div>
-										<div class="content__input">
-											<div class="headline">会社名</div>
-											<div class="input__text">
-												<span>{{ projectOrderer.company }}</span>
-											</div>
-										</div>
-										<div class="content__input">
-											<div class="headline">会社名（カナ）</div>
-											<div class="input__text">
-												<span>{{ projectOrderer.company_kana }}</span>
-											</div>
-										</div>
-										<div class="content__input">
-											<div class="headline">郵便番号</div>
-											<div class="input__text">
-												<span>〒{{ projectOrderer.zip }}</span>
-											</div>
-										</div>
-										<div class="content__input">
-											<div class="headline">住所</div>
-											<div class="input__text">
-												<span>{{ projectOrderer.address }}</span>
-											</div>
-										</div>
-										<div class="content__input">
-											<div class="headline">代表者名</div>
-											<div class="input__text">
-												<span>{{ projectOrderer.president }}</span>
-											</div>
-										</div>
-										<div class="content__input">
-											<div class="headline">代表者名（カナ）</div>
-											<div class="input__text">
-												<span>{{ projectOrderer.president_kana }}</span>
-											</div>
-										</div>
-										<div class="content__input">
-											<div class="headline">メールアドレス</div>
-											<div class="input__text">
-												<span>{{ projectOrderer.email }}</span>
-											</div>
-										</div>
-										<div class="content__input">
-											<div class="headline">電話番号</div>
-											<div class="input__text">
-												<span>{{ projectOrderer.tel }}</span>
-											</div>
-										</div>
-										<div class="content__input">
-											<div class="headline">ファックス</div>
-											<div class="input__text">
-												<span>{{ projectOrderer.fax }}</span>
-											</div>
-										</div>
-										<div class="content__input">
-											<div class="headline">備考</div>
-											<div class="input__text remark">
-												<span>{{ projectOrderer.remark }}</span>
-											</div>
-										</div>
-									</div>
-								</div>
-							</div>
-						</div>
-					</div>
-				</div>
-			</div>
+                <div class="content__floar">
+                    <div class="content__floar__inner">
+                        <div class="content__box">
+                            <div class="content__box__inner">
+                                <div class="content__input">
+                                    <div class="headline">携帯電話</div>
+                                    <div class="input__text">
+                                        <span v-if="projectOrderer">{{ projectOrderer.phone }}</span>
+                                    </div>
+                                </div>
+                                <div class="content__input">
+                                    <div class="headline">会社名</div>
+                                    <div class="input__text">
+                                        <span v-if="projectOrderer">{{ projectOrderer.company }}</span>
+                                    </div>
+                                </div>
+                                <div class="content__input">
+                                    <div class="headline">会社名（カナ）</div>
+                                    <div class="input__text">
+                                        <span v-if="projectOrderer">{{ projectOrderer.company_kana }}</span>
+                                    </div>
+                                </div>
+                                <div class="content__input">
+                                    <div class="headline">郵便番号</div>
+                                    <div class="input__text">
+                                        <span v-if="projectOrderer">〒{{ projectOrderer.zip }}</span>
+                                    </div>
+                                </div>
+                                <div class="content__input">
+                                    <div class="headline">住所</div>
+                                    <div class="input__text">
+                                        <span v-if="projectOrderer">{{ projectOrderer.address }}</span>
+                                    </div>
+                                </div>
+                                <div class="content__input">
+                                    <div class="headline">代表者名</div>
+                                    <div class="input__text">
+                                        <span v-if="projectOrderer">{{ projectOrderer.president }}</span>
+                                    </div>
+                                </div>
+                                <div class="content__input">
+                                    <div class="headline">代表者名（カナ）</div>
+                                    <div class="input__text">
+                                        <span v-if="projectOrderer">{{ projectOrderer.president_kana }}</span>
+                                    </div>
+                                </div>
+                                <div class="content__input">
+                                    <div class="headline">メールアドレス</div>
+                                    <div class="input__text">
+                                        <span v-if="projectOrderer">{{ projectOrderer.email }}</span>
+                                    </div>
+                                </div>
+                                <div class="content__input">
+                                    <div class="headline">電話番号</div>
+                                    <div class="input__text">
+                                        <span v-if="projectOrderer">{{ projectOrderer.tel }}</span>
+                                    </div>
+                                </div>
+                                <div class="content__input">
+                                    <div class="headline">ファックス</div>
+                                    <div class="input__text">
+                                        <span v-if="projectOrderer">{{ projectOrderer.fax }}</span>
+                                    </div>
+                                </div>
+                                <div class="content__input">
+                                    <div class="headline">備考</div>
+                                    <div class="input__text remark">
+                                        <span v-if="projectOrderer">{{ projectOrderer.remark }}</span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
 
 </template>
 

@@ -46,7 +46,6 @@ Route::middleware('auth:web')->group(function() {
     Route::get('/calendar','CalendarController@index')->name('calendar');
     Route::get('/holiday','CalendarController@getHoliday');
     Route::post('/holiday','CalendarController@postHoliday');
-
     // 工程表PDF
     Route::get('/pdf', 'TopController@pdfTest')->name('process_pdf');
     // 工程表
@@ -89,6 +88,24 @@ Route::middleware('auth:web')->group(function() {
     Route::get('/orderers/edit/{id}', 'OrderersController@edit')->name('orderers.edit');
     // 元請け_更新処理
     Route::post('/orderers/edit/{id}', 'OrderersController@update')->name('orderers.update');
+    // メモ一覧
+    Route::get('/memos', 'ChargeRemarksController@index')->name('charge-remarks.index');
+    // スタッフ一覧
+    Route::get('/charges', 'ChargesController@index')->name('charges.index');
+    // スタッフ_新規登録
+    Route::get('/charges/add', 'ChargesController@add')->name('charges.add');
+    // スタッフ_新規登録処理
+    Route::post('/charges/add', 'ChargesController@store')->name('charges.store');
+    // 担当者_詳細
+    Route::get('/charges/detail/{id}', 'ChargesController@show')->name('charges.show');
+    // 担当者_編集
+    Route::get('/charges/edit/{id}', 'ChargesController@edit')->name('charges.edit');
+    // 担当者_更新処理
+    Route::post('/charges/edit/{id}', 'ChargesController@update')->name('charges.update');
+    // 担当者_編集_パスワード
+    Route::get('/charges/edit/password/{id}', 'ChargesController@editPassword')->name('charges.edit_password');
+    // 担当者_更新処理_パスワード
+    Route::post('/charges/edit/password/{id}', 'ChargesController@updatePassword')->name('charges.update_password');
     // ユーザー情報
     Route::get('/user', 'UserController@show')->name('user.show');
     // ユーザー情報_編集
@@ -104,7 +121,6 @@ Route::middleware('auth:web')->group(function() {
 });
 
 Route::middleware('auth:charge')->prefix('charge')->group(function() {
-
     // ***** 営業担当者画面 *****
     // トップページ(※ログイン画面へリダイレクト)
     // Route::get('/', 'TopController@index')->name('index');
@@ -154,6 +170,8 @@ Route::middleware('auth:charge')->prefix('charge')->group(function() {
     Route::get('/orderers/edit/{id}', 'OrderersController@edit')->name('charge.orderers.edit');
     // 元請け_更新処理
     Route::post('/orderers/edit/{id}', 'OrderersController@update')->name('charge.orderers.update');
+    // メモ一覧
+    Route::get('/memos', 'ChargeRemarksController@index')->name('charge.charge-remarks.index');
     // ユーザー情報
     Route::get('/user', 'UserController@show')->name('charge.user.show');
     // ユーザー情報_編集

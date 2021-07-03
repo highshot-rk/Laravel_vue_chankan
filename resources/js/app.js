@@ -19,7 +19,10 @@ window.Vue = require('vue');
 
 // const files = require.context('./', true, /\.vue$/i)
 // files.keys().map(key => Vue.component(key.split('/').pop().split('.')[0], files(key).default))
+// import Vue from 'vue'
 import 'swiper/swiper.scss'
+import Loading from 'vue-loading-overlay'
+
 var VueAwesomeSwiper = require('vue-awesome-swiper')
 Vue.use(VueAwesomeSwiper)
 
@@ -28,6 +31,9 @@ Vue.component('yet-project-sp-component', require('./components/calendar/YetProj
 Vue.component('board', require('./components/calendar/Board.vue').default);
 Vue.component('daily-project-pc-component', require('./components/calendar/DailyProjectPcComponent.vue').default);
 Vue.component('daily-project-sp-component', require('./components/calendar/DailyProjectSpComponent.vue').default);
+// 担当者
+Vue.component('charge-show-component', require('./components/charge/ChargeShowComponent.vue').default);
+// 案件
 Vue.component('project-register-component', require('./components/projects/ProjectRegisterComponent.vue').default);
 Vue.component('project-show-component', require('./components/projects/ProjectShowComponent.vue').default);
 Vue.component('project-orderer-show-component', require('./components/projects/ProjectOrdererShowComponent.vue').default);
@@ -50,6 +56,7 @@ Vue.component('admin-advertisement-show-component', require('./components/manage
 Vue.component('admin-advertisement-edit-component', require('./components/manage/AdvertisementEditComponent.vue').default);
 
 Vue.component('modal', require('./components/common/Modal.vue').default);
+Vue.component('loading', Loading);
 
 /**
  * Next, we will create a fresh Vue application instance and attach it to
@@ -63,7 +70,7 @@ const app = new Vue({
     data() {
         return {
             isMenuModal: false, // メニューモーダル
-            isSearchActive: false, //　検索モーダル
+            isSearchActive: false, // 検索モーダル
             textbox: "",
         }
     },

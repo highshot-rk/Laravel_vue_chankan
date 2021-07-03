@@ -7,6 +7,11 @@
                         <h1 class="h1">{{ dispWorkOnString(workOnItem) }}の案件</h1>
                         <span class="en">Day of Construction</span>
                     </div>
+                    <div class="content__edit" style="margin-left: auto; margin-right: 0px;">
+                        <ul class="flex__wrap f__end">
+                            <li><a :href="`${urlPrefix}/memos/?work_on=` + workOnItem">メモ一覧</a></li>
+                        </ul>
+                    </div>
                 </div>
                 <div class="content__tab">
                     <div class="content__tab__box flex__wrap four__tab">
@@ -33,15 +38,22 @@
                                 </tr>
                             </thead>
                             <tbody>
-                                <template v-for="(project, index_in) in workOnProjects(index)">
-                                    <tr>
+                                <!-- 5/28 修正 -->
+                                <!-- <template
+                                    v-for="(project, index_in) in workOnProjects(index)"
+                                    :key="index_in"
+                                > -->
+                                    <tr
+                                        v-for="(project, index_in) in workOnProjects(index)"
+                                        :key="index_in"
+                                    >
                                         <td>
                                             <a :href="`${urlPrefix}/projects/detail/${project.id}`">
                                                 <span class="title">{{ project.name }} /
                                                     <template v-if="project.project_type_name == '解体'">
                                                         <span class="colorRed">{{ project.project_type_name }}</span>
                                                     </template>
-                                                    <template v-else="project.project_type_name">
+                                                    <template v-else-if="project.project_type_name">
                                                         <span class="colorBlue">
                                                         {{ project.project_type_name }}
                                                         </span>
@@ -59,7 +71,9 @@
                                         <td>
                                             <span class="date">{{ project.work_on_string }} / {{ project.time_type_name }}</span><br>
                                             <span class="other"><span v-if="project.scheduled_arrival_time_from">{{ project.scheduled_arrival_time_from }} ~ {{ project.scheduled_arrival_time_to }}</span></span><br>
-                                            <span class="charge">{{ project.charge.name }}</span></td>
+                                            <span class="charge" v-if="project.charge">{{ project.charge.name }}</span>
+                                            <span class="charge" v-else>未定</span>
+                                        </td>
                                         <td>
                                             <span class="address">{{ project.address }}</span><br>
                                             <span class="company">{{ project.project_orderer.company }}</span><br>
@@ -72,7 +86,7 @@
                                             </td>
                                         <td class="input__box"><textarea v-model="project.remark" class="bgType remark" ref="remark" @change="modifyRemark(project.id, index_in)"></textarea></td>
                                     </tr>
-                                </template>
+                                <!-- </template> -->
                             </tbody>
                         </table>
                     </div>
@@ -180,6 +194,8 @@
                                 this.workOnArray.push(project.work_on_date)
                             }
                         })
+                        // 日付順に並び替える
+                        this.workOnArray.sort()
                         // propsで受け取った施工日をデフォルトの表示位置とする
                         this.workOnArray.forEach((workOn, index) => {
                             if (workOn === this.workOn) {

@@ -14,8 +14,8 @@ class AddColumnWorkerProjects extends Migration
     public function up()
     {
         Schema::table('projects', function (Blueprint $table) {
-            $table->string('worker', 255)->nullable(true)->after('is_send_to_charge');
-            $table->unsignedInteger('process_color_id')->nullable(true)->after('worker');
+            $table->unsignedInteger('worker_id')->nullable(true)->after('is_send_to_charge');
+            $table->unsignedInteger('process_color_id')->nullable(true)->after('worker_id');
         });
     }
 

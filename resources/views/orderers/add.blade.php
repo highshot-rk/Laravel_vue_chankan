@@ -1,13 +1,13 @@
 @include("../components/head")
 <body>
     <div id="app">
-    	<!-- スマホのみのメニューバー -->
-    	@include("../components/nav")
-    	<div class="wrap flex__wrap f__start input__area">
-    		@include("../components/sidebar")
-    		<div class="wrap__right">
-    			@include("../components/header")
-    			<div class="allWrapper">
+        <!-- スマホのみのメニューバー -->
+        @include("../components/nav")
+        <div class="wrap flex__wrap f__start input__area">
+            @include("../components/sidebar")
+            <div class="wrap__right">
+                @include("../components/header")
+                <div class="allWrapper">
                     <form @if ($isCharge) action="{{ route('charge.orderers.store') }}" @else action="{{ route('orderers.store') }}" @endif method="POST">
                         @csrf
 

@@ -44,15 +44,21 @@
                                                 <img :src="thumbImg">
                                             </div>
                                             <div class="input__delete"
-                                                    :class="{get: getImg}"
-                                                    @click="deleteItem">
-                                                <span><img src="/assets/img/icon_batu_white.png"></span>
+                                                :class="{get: getImg}"
+                                                @click="deleteItem">
+                                            <span><img src="/assets/img/icon_batu_white.png"></span>
                                             </div>
                                         </div>
                                         <div class="input__img__label v__center flex__wrap">
                                             <label>
                                                 <span>画像を選択</span>
-                                                <input type="file" ref="file" class="avatar_name" accept="image/jpeg, image/png, application/pdf" @change="setImage">
+                                                <input
+                                                    type="file"
+                                                    ref="file"
+                                                    class="avatar_name"
+                                                    accept="image/jpeg, image/png, application/pdf"
+                                                    @change="setImage"
+                                                >
                                             </label>
                                         </div>
                                     </div>
@@ -64,7 +70,7 @@
             </div>
             <div class="content__submit f__center">
                 <div class="submit__box">
-                    <a href="" @click.prevent="fin">完了報告を送信</a>
+                    <a @click.prevent="fin">完了報告を送信</a>
                 </div>
             </div>
         </div>
@@ -90,17 +96,15 @@
         data() {
             // 必要に応じて変数を定義
             return {
-                image:　　null,
+                image: null,
                 thumbImg:'/assets/img/noImage.png',
-                getImg:　false,
+                getImg: false,
                 isEnter: false,
                 files: []
             }
         },
         created: function() {
             // 必要に応じて、初期表示時に使用するLaravelのAPIを呼び出すメソッドを定義
-
-
         },
         computed: {
             // 必要に応じてメソッドを定義
@@ -142,13 +146,14 @@
                         'content-type': 'multipart/form-data'
                     }
                 }
-                axios.post('/api/progress/fin/'+this.id, formData)
-                    .then(result => {
+                axios
+                    .post('/api/progress/fin/'+this.id, formData)
+                    .then(res => {
                         // 更新後、完了画面へ遷移する
                         location.href = '/progress/'+ this.id +'/complete?is_finish_reported=1'
                     })
-                    .catch(result => {
-                        errorHandling.errorMessage(result)
+                    .catch(err => {
+                        errorHandling.errorMessage(err)
                     })
             },
             // 画像がドロップエリアに入った場合
@@ -165,8 +170,6 @@
             },
             dropFile: function() {
                 this.isEnter = false
-                
-                
                 if (this.files.length > 1) {
                     return alert('アップロードできるファイルは1つだけです。')
                 } else {

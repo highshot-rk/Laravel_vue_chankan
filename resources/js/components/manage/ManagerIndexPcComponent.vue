@@ -1,54 +1,54 @@
 <template>
 <div>
-<modal ref="modal" @parentMethod="executeMethod">
-    <template v-slot:message>{{ message }}</template>
-    <template v-slot:ok>OK</template>
-    <template v-slot:cancel>戻る</template>
-</modal>
-<div class="content__manage">
-                <div class="content__tab">
-                  <div class="content__tab__box flex__wrap two">
-                    <div class="content__tab__content" :class="{selected: isActive}" @click="changeIsActive(true)"><span>稼働中</span></div>
-                    <div class="content__tab__content"  :class="{selected: !isActive}" @click="changeIsActive(false)"><span>停止中</span></div>
-                  </div>
-                </div>
-              </div>
-              <div class="content__floar">
-                <div class="content__floar__inner manage_list">
-    <table class="matrer__list manager_list activeTable">
-        <thead>
-        <tr>
-            <th>管理者名</th>
-            <th>メールアドレス</th>
-            <th></th>
-        </tr>
-        </thead>
-        <tbody>
-            <template v-if="isActive" v-for="(manager, index) in activeManagers">
-                <tr>
-                    <td><span class="title">{{ manager.name }}</span></td>
-                    <td>{{ manager.email }}</td>
-                    <td>
-                    <ul class="edit flex__wrap f__end">
-                        <li class="edit"><a :href="url_edit(manager.id)">編集</a></li>
-                        <li class="delete" @click="confirmStop(manager.id)"><span>停止</span></li>
-                    </ul>
-                    </td>
-                </tr>
-            </template>
-            <template v-if="!isActive" v-for="manager in stoppedManagers">
-                <tr class="stop">
-                    <td><span class="title">{{ manager.name }}</span></td>
-                    <td>{{ manager.email }}</td>
-                    <td>
-                    <ul class="edit flex__wrap f__end">
-                        <li class="revival" @click="confirmResurrect(manager.id)"><span>復活</span></li>
-                    </ul>
-                    </td>
-                </tr>
-            </template>
-        </tbody>
-    </table>
+    <modal ref="modal" @parentMethod="executeMethod">
+        <template v-slot:message>{{ message }}</template>
+        <template v-slot:ok>OK</template>
+        <template v-slot:cancel>戻る</template>
+    </modal>
+    <div class="content__manage">
+        <div class="content__tab">
+            <div class="content__tab__box flex__wrap two">
+                <div class="content__tab__content" :class="{selected: isActive}" @click="changeIsActive(true)"><span>稼働中</span></div>
+                <div class="content__tab__content"  :class="{selected: !isActive}" @click="changeIsActive(false)"><span>停止中</span></div>
+            </div>
+        </div>
+    </div>
+    <div class="content__floar">
+        <div class="content__floar__inner manage_list">
+            <table class="matrer__list manager_list activeTable">
+                <thead>
+                    <tr>
+                        <th>管理者名</th>
+                        <th>メールアドレス</th>
+                        <th></th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <template v-if="isActive" v-for="(manager, index) in activeManagers">
+                        <tr>
+                            <td><span class="title">{{ manager.name }}</span></td>
+                            <td>{{ manager.email }}</td>
+                            <td>
+                            <ul class="edit flex__wrap f__end">
+                                <li class="edit"><a :href="url_edit(manager.id)">編集</a></li>
+                                <li class="delete" @click="confirmStop(manager.id)"><span>停止</span></li>
+                            </ul>
+                            </td>
+                        </tr>
+                    </template>
+                    <template v-if="!isActive" v-for="manager in stoppedManagers">
+                        <tr class="stop">
+                            <td><span class="title">{{ manager.name }}</span></td>
+                            <td>{{ manager.email }}</td>
+                            <td>
+                                <ul class="edit flex__wrap f__end">
+                                    <li class="revival" @click="confirmResurrect(manager.id)"><span>復活</span></li>
+                                </ul>
+                            </td>
+                        </tr>
+                    </template>
+                </tbody>
+            </table>
 
     <!-- <table class="matrer__list manager_list stopTable">
         <thead>
@@ -72,9 +72,9 @@
             </template>
         </tbody>
     </table> -->
-</div>
-</div>
-</div>
+            </div>
+        </div>
+    </div>
 </template>
 
 <script>

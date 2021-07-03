@@ -1,5 +1,6 @@
 {{-- viewファイル --}}
 @extends('layouts.user')
+
 @section('title', 'カレンダー')
 @section('content')
     <div class="allWrapper calender">
@@ -11,10 +12,13 @@
                         <div class="calender__table">
                             {!!$cal_tag!!}
                         </div>
-                        <div class="content__submit f__center">
-                            <div class="submit__box">
-                                <a @if ($isCharge) href="{{ route('charge.yetproject.index') }}" @else href="{{ route('yetproject.index') }}" @endif>
-                        未解体案件一覧</a>
+                        @if(!$isViewer)
+                            <div class="content__submit f__center">
+                                <div class="submit__box">
+                                    <a @if ($isCharge) href="{{ route('charge.yetproject.index') }}" @else href="{{ route('yetproject.index') }}" @endif>未解体案件一覧</a>
+                                </div>
+                            </div>
+                        @endif
                     </div>
                 </div>
             </div>

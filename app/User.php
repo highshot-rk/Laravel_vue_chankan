@@ -162,6 +162,7 @@ class User extends Authenticatable
             $this->smss()->ofCreatedAtByYearMonth($date->year, $date->month)->ofIsSentToCharge(true)->get()->count()
         ) * Sms::UNIT_PRICE;
     }
+
     /**
      * リレーション：SMSの年月ごとの回数
      *

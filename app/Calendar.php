@@ -72,23 +72,33 @@ class Calendar
                 } else {
                     // 案件情報の有無により、カウント値、リンク付与の有無を決定
                     $date        = sprintf('%04d-%02d-%02d', $year, $month, $day);
-                    $amProjects  = Project::whereDate('work_on', $date)
+                    // $amProjects  = Project::whereDate('work_on', $date)
+                    //     ->ofUserId(AuthService::getAuthUser()->id)
+                    //     ->ofTimeType([config('const.project.time_type.am')])
+                    //     ->count();
+                    // $pmProjects  = Project::whereDate('work_on', $date)
+                    //     ->ofUserId(AuthService::getAuthUser()->id)
+                    //     ->ofTimeType([config('const.project.time_type.pm')])
+                    //     ->count();
+                    $allProjects = Project::whereDate('work_on', $date)
                         ->ofUserId(AuthService::getAuthUser()->id)
-                        ->ofTimeType([config('const.project.time_type.am')])
                         ->count();
-                    $pmProjects  = Project::whereDate('work_on', $date)
+                    $allMemos = ChargeRemark::whereDate('work_on', $date)
                         ->ofUserId(AuthService::getAuthUser()->id)
-                        ->ofTimeType([config('const.project.time_type.pm')])
                         ->count();
                     $link = '';
-                    if (($amProjects > 0) || ($pmProjects > 0)) {
+                    // if (($amProjects > 0) || ($pmProjects > 0)) {
+                    //     $link = $urlPrefix.'/projects?work_on='.$date;
+                    // }
+                    if (($allProjects > 0)) {
                         $link = $urlPrefix.'/projects?work_on='.$date;
                     }
                     $todayDay = date("d");
                     $todayMonth = date("m");
 
                     $param_date = "y=" . $year . "&m=" . $month . "&d=" . sprintf("%02d", $day);
-                    if (($amProjects == 0) && ($pmProjects == 0)) {
+                    // if (($amProjects == 0) && ($pmProjects == 0)) {
+                    if (($allProjects == 0)) {
                         $this->html .= "<td id=\"" . $param_date . "\">" . "<a>";
                     } else {
                         $this->html .= "<td id=\"" . $param_date . "\">" . "<a class='linkCalender' href=" . $link . ">";
@@ -98,7 +108,8 @@ class Calendar
                     } else {
                         $this->html .= "<div class='top'><span class='date'>" . $day . "</span>";
                     }
-                    $this->html .= "</div><ul><li><span class='time'>AM - " . $amProjects . "</span></li><li><span class='time'>PM - " . $pmProjects . "</span></li></ul></a></td>";
+                    // $this->html .= "</div><ul><li><span class='time'>AM - " . $amProjects . "</span></li><li><span class='time'>PM - " . $pmProjects . "</span></li></ul></a></td>";
+                    $this->html .= "</div><ul><li><span class='time'>案件 - " . $allProjects . "</span></li><li><span class='time'>メモ - " . $allMemos . "</span></li></ul></a></td>";
                 }
                 $day++;
             }

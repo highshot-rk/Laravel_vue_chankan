@@ -1,11 +1,11 @@
 @include("../components/head")
 <body>
     <div id="app">
-    	<div class="wrap flex__wrap f__start input__area">
-    		@include("../components/manage-sidebar")
-    		<div class="wrap__right">
-    			@include("../components/manage-header")
-    			<div class="allWrapper">
+        <div class="wrap flex__wrap f__start input__area">
+            @include("../components/manage-sidebar")
+            <div class="wrap__right">
+                @include("../components/manage-header")
+                <div class="allWrapper">
                     <form action="{{ route('admin.contracts.register', $id) }}" method="POST">
                         @csrf
                         <div class="content__wrap">
@@ -33,8 +33,6 @@
                                     <div class="content__floar__inner">
                                         <div class="content__box">
                                             <div class="content__box__inner">
-
-
                                                 <div class="content__input">
                                                     <div class="headline">契約期間</div>
                                                     <div class="input__wrap">
@@ -53,7 +51,7 @@
                                                             </option>
                                                             @endforeach
                                                         </select>
-     --}}
+                                                        --}}
                                                         </div>
                                                     </div>
                                                 </div>
@@ -64,7 +62,6 @@
                                                             <input class="bgType" type="text" name="price" value="{{ old('price') }}">
                                                         </div>
                                                     </div>
-
                                                 </div>
                                             </div>
                                         </div>
@@ -78,9 +75,9 @@
                             </div>
                         </div>
                     </form>
-    			</div>
-    		</div>
-    	</div>
+                </div>
+            </div>
+        </div>
     </div>
 	@include("../components/footer")
 </body>

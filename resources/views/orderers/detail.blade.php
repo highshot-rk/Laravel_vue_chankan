@@ -6,8 +6,8 @@
 		<div class="wrap flex__wrap f__start input__area">
 			@include("../components/sidebar")
 			<div class="wrap__right">
-	            @include("../components/header")
-	            <project-orderer-show-component :id="{{ $id }}" is-charge="{{ $isCharge }}" is-viewer="{{ $isViewer }}" url-prefix="{{ $urlPrefix }}"></project-orderer-show-component>
+                @include("../components/header")
+                <project-orderer-show-component :id="{{ $id }}" is-charge="{{ $isCharge }}" is-viewer="{{ $isViewer }}" url-prefix="{{ $urlPrefix }}"></project-orderer-show-component>
 			</div>
 		</div>
 	</div>
