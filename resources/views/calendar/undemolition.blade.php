@@ -42,9 +42,11 @@
                                                         <a @if ($isCharge) href="{{ route('charge.yetproject.register', $project->id) }}" @else href="{{ route('yetproject.register', $project->id) }}" @endif>
                                                             <span class="title">{{ $project->name }}</span><br>
                                                             <div class="spent_date" style="display:table-cell; text-align:right;">
-                                                                <span class="colorRed bold">経過日数
-                                                                {{ $project->work_on && (strtotime("now") >= strtotime($project->work_on)) ? ceil((strtotime("now") - strtotime($project->work_on))/3600/24) : "" }}
-                                                                日</span>
+                                                                @if ($project->work_on && (strtotime("now") >= strtotime($project->work_on)))
+	                                                                <span class="colorRed bold">経過日数
+	                                                                {{ ceil((strtotime("now") - strtotime($project->work_on))/3600/24) }}
+		                                                            日</span>
+	                                                            @endif
                                                             </div>
                                                             <ul class="flex__wrap f__start status">
                                                                 <li class="@if ($project->is_surveyed) done @endif"><span>現調</span></li>
